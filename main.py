@@ -47,6 +47,54 @@ class TKGUI:
         self.originalIMGLabel = tk.Label(self.frameMidHigh, text="")
         self.originalIMGLabel.grid(row=1, column=0, padx=5, pady=5)
 
+        self.frameIMGMID = tk.Frame(self.frameMidHigh)  # resizeSize,colour,kmean
+        self.frameIMGMID.grid(row=0, column=1)
+
+        self.colourL = tk.Label(self.frameIMGMID, text="Number of Colour (min 1)")
+        self.colourL.grid(row=0, column=0, padx=5, pady=5)
+        self.colour = tk.Entry(self.frameIMGMID)
+        self.colour.grid(row=1, column=0, padx=5, pady=5)
+        self.colour.insert(0, "8")
+        self.colourV = int(self.colour.get())
+
+        self.tgtSizeL = tk.Label(self.frameIMGMID, text="Target Size (px)")
+        self.tgtSizeL.grid(row=2, column=0, padx=5, pady=5)
+        self.tgtSize = tk.Entry(self.frameIMGMID)
+        self.tgtSize.insert(0, "128")
+        self.tgtSizeV = int(self.tgtSize.get())
+        self.tgtSize.grid(row=3, column=0, padx=5, pady=5)
+
+        self.shadeCountL = tk.Label(self.frameIMGMID, text="Shade Count (min 2)")
+        self.shadeCountL.grid(row=4, column=0, padx=5, pady=5)
+        self.shadeCount = tk.Entry(self.frameIMGMID)
+        self.shadeCount.insert(0, "8")
+        self.shadeCountV = int(self.shadeCount.get())
+        self.shadeCount.grid(row=5, column=0, padx=5, pady=5)
+
+        self.brightnessL = tk.Label(self.frameIMGMID, text="brightness (float)")
+        self.brightnessL.grid(row=6, column=0, padx=5, pady=5)
+        self.brightness = tk.Entry(self.frameIMGMID)
+        self.brightness.insert(0, "1")
+        self.brightnessV = int(self.shadeCount.get())
+        self.brightness.grid(row=7, column=0, padx=5, pady=5)
+
+        self.sharpnessL = tk.Label(self.frameIMGMID, text="sharpness (float)")
+        self.sharpnessL.grid(row=8, column=0, padx=5, pady=5)
+        self.sharpness = tk.Entry(self.frameIMGMID)
+        self.sharpness.insert(0, "1")
+        self.sharpnessV = int(self.shadeCount.get())
+        self.sharpness.grid(row=9, column=0, padx=5, pady=5)
+
+        self.scaleL = tk.Label(self.frameIMGMID, text="Scale")
+        self.scaleL.grid(row=10, column=0, padx=5, pady=5)
+        self.scale = tk.Entry(self.frameIMGMID)
+        self.scale.insert(0, "1")
+        self.scaleV = int(self.scale.get())
+        self.scale.grid(row=11, column=0, padx=5, pady=5)
+
+        self.scaleC = tk.Button(self.frameIMGMID, text="scale", command=self.scaleS)
+        self.scaleC.grid(row=11, column=1, sticky=tk.W, padx=5, pady=5)
+
         self.newIMGDisp = tk.Label(self.frameMidHigh)
         self.newIMGDisp.grid(row=0, column=2, padx=5, pady=5)
 
@@ -75,53 +123,6 @@ class TKGUI:
         self.defaultButton.grid(row=0, column=4, sticky=tk.W, padx=5, pady=5)
 
         # bottom section
-        self.frameBottom = tk.Frame(self.frameMaster)  # resizeSize,colour,kmean
-        self.frameBottom.grid(row=3, column=0)
-
-        self.colourL = tk.Label(self.frameBottom, text="Number of Colour (min 1)")
-        self.colourL.grid(row=0, column=0, padx=5, pady=5)
-        self.colour = tk.Entry(self.frameBottom)
-        self.colour.grid(row=1, column=0, padx=5, pady=5)
-        self.colour.insert(0, "8")
-        self.colourV = int(self.colour.get())
-
-        self.tgtSizeL = tk.Label(self.frameBottom, text="Target Size (px)")
-        self.tgtSizeL.grid(row=0, column=1, padx=5, pady=5)
-        self.tgtSize = tk.Entry(self.frameBottom)
-        self.tgtSize.insert(0, "128")
-        self.tgtSizeV = int(self.tgtSize.get())
-        self.tgtSize.grid(row=1, column=1, padx=5, pady=5)
-
-        self.shadeCountL = tk.Label(self.frameBottom, text="Shade Count (min 2)")
-        self.shadeCountL.grid(row=0, column=2, padx=5, pady=5)
-        self.shadeCount = tk.Entry(self.frameBottom)
-        self.shadeCount.insert(0, "8")
-        self.shadeCountV = int(self.shadeCount.get())
-        self.shadeCount.grid(row=1, column=2, padx=5, pady=5)
-
-        self.brightnessL = tk.Label(self.frameBottom, text="brightness (float)")
-        self.brightnessL.grid(row=0, column=3, padx=5, pady=5)
-        self.brightness = tk.Entry(self.frameBottom)
-        self.brightness.insert(0, "1")
-        self.brightnessV = int(self.shadeCount.get())
-        self.brightness.grid(row=1, column=3, padx=5, pady=5)
-
-        self.sharpnessL = tk.Label(self.frameBottom, text="sharpness (float)")
-        self.sharpnessL.grid(row=0, column=4, padx=5, pady=5)
-        self.sharpness = tk.Entry(self.frameBottom)
-        self.sharpness.insert(0, "1")
-        self.sharpnessV = int(self.shadeCount.get())
-        self.sharpness.grid(row=1, column=4, padx=5, pady=5)
-
-        self.scaleL = tk.Label(self.frameBottom, text="Scale")
-        self.scaleL.grid(row=0, column=5, padx=5, pady=5)
-        self.scale = tk.Entry(self.frameBottom)
-        self.scale.insert(0, "1")
-        self.scaleV = int(self.scale.get())
-        self.scale.grid(row=1, column=5, padx=5, pady=5)
-
-        self.scaleC = tk.Button(self.frameBottom, text="scale", command=self.scaleS)
-        self.scaleC.grid(row=1, column=6, sticky=tk.W, padx=5, pady=5)
 
     def openImage(self):
         self.originalIMGDisp.Image = None
