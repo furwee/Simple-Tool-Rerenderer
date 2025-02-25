@@ -131,10 +131,13 @@ class TKGUI:
 
         # bottom section
 
-    def importPalette(self):
-        filePath = filedialog.askopenfilename(filetypes=[("Image files", "")])
-        if filePath:
-            self.palette = filePath
+    def importPalette(self, path=""):
+        if path == "":
+            filePath = filedialog.askopenfilename(filetypes=[("Image files", "")])
+            if filePath:
+                self.palette = filePath
+        else:
+            self.palette = path
 
     def openImage(self):
         self.originalIMGDisp.Image = None
