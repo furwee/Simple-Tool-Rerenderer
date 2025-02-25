@@ -250,6 +250,7 @@ class TKGUI:
         self.sharpness.insert(0, "1")
         self.scale.delete(0, 'end')
         self.scale.insert(0, "4")
+        self.palette = "testPremadePalette.png"
 
 
 def main():
