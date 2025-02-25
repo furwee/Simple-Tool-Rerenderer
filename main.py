@@ -12,34 +12,38 @@ class TKGUI:
         self.saveFilePath = "Downloads/save.jpg"
         self.newIMG = ImageRender("test.jpg")
         self.dispSize = 512
+        self.palette = "testPremadePalette.png"
 
         self.frameMaster = tk.Frame(self.root)
         self.frameMaster.grid(row=0, column=0)
 
         # top section
         self.frameTop = tk.Frame(self.frameMaster)  # ultilities: open image button, convert button, save button
-        self.frameTop.grid(row=0, column=0, sticky=tk.N, padx=5, pady=5)
+        self.frameTop.grid(row=0, column=0, padx=5, pady=5)
 
         self.imageOpen1 = tk.Button(self.frameTop, text="open image", command=self.openImage)
-        self.imageOpen1.grid(row=0, column=0, sticky=tk.E, padx=5, pady=5)
+        self.imageOpen1.grid(row=0, column=0, padx=5, pady=5)
 
         self.imageConvertAdaptive1 = tk.Button(self.frameTop, text="convert image (adaptive)",
                                                command=self.convertImageAdaptive)
-        self.imageConvertAdaptive1.grid(row=0, column=1, sticky=tk.N, padx=5, pady=5)
+        self.imageConvertAdaptive1.grid(row=0, column=1, padx=5, pady=5)
+
+        self.importPalette1 = tk.Button(self.frameTop, text="import palette", command=self.importPalette)
+        self.importPalette1.grid(row=0, column=2, padx=5, pady=5)
 
         self.imageConvertPremade1 = tk.Button(self.frameTop, text="convert image (premade)",
                                               command=self.convertImagePremade)
-        self.imageConvertPremade1.grid(row=0, column=2, sticky=tk.N, padx=5, pady=5)
+        self.imageConvertPremade1.grid(row=0, column=3, sticky=tk.N, padx=5, pady=5)
 
         self.imageSave1 = tk.Button(self.frameTop, text="save image", command=self.saveImage)
-        self.imageSave1.grid(row=0, column=3, sticky=tk.W, padx=5, pady=5)
+        self.imageSave1.grid(row=0, column=4, padx=5, pady=5)
 
         self.defaultButton1 = tk.Button(self.frameTop, text="default", command=self.default)
-        self.defaultButton1.grid(row=0, column=4, sticky=tk.W, padx=5, pady=5)
+        self.defaultButton1.grid(row=0, column=5, padx=5, pady=5)
 
         # middle high section
         self.frameMidHigh = tk.Frame(self.frameMaster)  # image section: original image, new Image
-        self.frameMidHigh.grid(row=1, column=0, sticky=tk.S, padx=5, pady=5)
+        self.frameMidHigh.grid(row=1, column=0, padx=5, pady=5)
 
         self.originalIMGDisp = tk.Label(self.frameMidHigh)
         self.originalIMGDisp.grid(row=0, column=0, padx=5, pady=5)
@@ -112,17 +116,25 @@ class TKGUI:
                                               command=self.convertImageAdaptive)
         self.imageConvertAdaptive.grid(row=0, column=1, sticky=tk.N, padx=5, pady=5)
 
+        self.importPalette = tk.Button(self.frameMiddle, text="import palette", command=self.importPalette)
+        self.importPalette.grid(row=0, column=2, padx=5, pady=5)
+
         self.imageConvertPremade = tk.Button(self.frameMiddle, text="convert image (premade)",
                                              command=self.convertImagePremade)
-        self.imageConvertPremade.grid(row=0, column=2, sticky=tk.N, padx=5, pady=5)
+        self.imageConvertPremade.grid(row=0, column=3, sticky=tk.N, padx=5, pady=5)
 
         self.imageSave = tk.Button(self.frameMiddle, text="save image", command=self.saveImage)
-        self.imageSave.grid(row=0, column=3, sticky=tk.W, padx=5, pady=5)
+        self.imageSave.grid(row=0, column=4, sticky=tk.W, padx=5, pady=5)
 
         self.defaultButton = tk.Button(self.frameMiddle, text="default", command=self.default)
-        self.defaultButton.grid(row=0, column=4, sticky=tk.W, padx=5, pady=5)
+        self.defaultButton.grid(row=0, column=5, sticky=tk.W, padx=5, pady=5)
 
         # bottom section
+
+    def importPalette(self):
+        filePath = filedialog.askopenfilename(filetypes=[("Image files", "")])
+        if filePath:
+            self.palette = filePath
 
     def openImage(self):
         self.originalIMGDisp.Image = None
@@ -194,7 +206,7 @@ class TKGUI:
         pic.resize(self.tgtSizeV)
         pic.medianFilter()
         pic.sharpen(self.sharpnessV)
-        pic2 = ImageRender("testPremadePalette.png").convertNP()
+        pic2 = ImageRender(self.palette).convertNP()
         pic = pic.convertPart(pic2)
         pic.save("Saved.png")
         pic = ImageRender("Saved.png")
