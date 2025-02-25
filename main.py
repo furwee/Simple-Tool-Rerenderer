@@ -124,7 +124,6 @@ class TKGUI:
 
         # bottom section
 
-
     def openImage(self):
         self.originalIMGDisp.Image = None
         filePath = filedialog.askopenfilename(filetypes=[("Image files", "")])
