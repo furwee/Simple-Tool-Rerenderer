@@ -124,6 +124,7 @@ class TKGUI:
 
         # bottom section
 
+
     def openImage(self):
         self.originalIMGDisp.Image = None
         filePath = filedialog.askopenfilename(filetypes=[("Image files", "")])
@@ -164,8 +165,8 @@ class TKGUI:
         pic2 = pic
         pic2 = pic2.palette(colour=self.colourV, shadeCount=self.shadeCountV)
         pic = pic.convertPart(pic2)
-        pic.save("Saved.jpg")
-        pic = ImageRender("Saved.jpg")
+        pic.save("Saved.png")
+        pic = ImageRender("Saved.png")
         pic.medianFilter()
         pic.sharpen(self.sharpnessV)
         pic.enhanceBrightness(self.brightnessV)
@@ -196,8 +197,8 @@ class TKGUI:
         pic.sharpen(self.sharpnessV)
         pic2 = ImageRender("testPremadePalette.png").convertNP()
         pic = pic.convertPart(pic2)
-        pic.save("Saved.jpg")
-        pic = ImageRender("Saved.jpg")
+        pic.save("Saved.png")
+        pic = ImageRender("Saved.png")
         # pic.medianFilter()
         pic.sharpen(self.sharpnessV)
         pic.enhanceBrightness(self.brightnessV)
@@ -212,7 +213,7 @@ class TKGUI:
 
     def scaleS(self):
         self.scaleV = float(self.scale.get())
-        pic = ImageRender("Saved.jpg")
+        pic = ImageRender("Saved.png")
         # pic.medianFilter()
         pic.sharpen(self.sharpnessV)
         pic.enhanceBrightness(self.brightnessV)
