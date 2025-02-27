@@ -1,5 +1,6 @@
 import tkinter as tk
 from tkinter import filedialog
+import os
 
 from ImageForRender import *
 from Stack import *
@@ -376,11 +377,16 @@ class TKGUI:
 
 
 def main():
-    rootTK = tk.Tk()
-    rootTK.resizable(False, False)
-    rootTK.iconbitmap("asset\\STR_Logo_PA.ico")
-    TKGUI(rootTK)
-    rootTK.mainloop()
+    try:
+        os.makedirs("cache")
+    except FileExistsError:
+        pass
+    finally:
+        rootTK = tk.Tk()
+        rootTK.resizable(False, False)
+        rootTK.iconbitmap("asset\\STR_Logo_PA.ico")
+        TKGUI(rootTK)
+        rootTK.mainloop()
 
 
 if __name__ == "__main__": main()
