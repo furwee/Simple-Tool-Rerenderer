@@ -96,6 +96,9 @@ class ImageRender:
         self.convertRGB()
         return np.array(self.image).reshape(-1, 3)
 
+    def ditherFloyd(self):
+        self.image = self.image.convert(dither=Image.Dither.FLOYDSTEINBERG)
+
     def palette(self, colour, shadeCount):
         try:
             palette = generatePalette(self.domColour(colour), shadeCount)[1]
