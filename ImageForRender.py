@@ -37,7 +37,7 @@ def closestColor(pixel, palette):
 
 class ImageRender:
 
-    def __init__(self, path: str):
+    def __init__(self, path: str = None):
         self.path = path
         self.image = Image.open(path)
 
@@ -134,7 +134,7 @@ class ImageRender:
                 break
             else:
                 k += 1
-        return newIMG
+        self.image = newIMG
 
     def crop(self):
         self.image = self.image.crop((0, 0, self.getWidth() - 1, self.getHeight()))
@@ -166,8 +166,10 @@ class ImageRender:
         imgArray = np.array(self.image)
         if scale < 20:
             self.image = Image.fromarray(np.repeat(np.repeat(imgArray, scale, axis=0), scale, axis=1))
+            return self.image
         else:
             self.image = Image.fromarray(np.repeat(np.repeat(imgArray, 20, axis=0), scale, axis=1))
+            return self.image
 
     def medianFilter(self):
         self.image = self.image.filter(ImageFilter.MedianFilter(size=1))
@@ -179,6 +181,9 @@ class ImageRender:
     def enhanceBrightness(self, bright):
         enhancer = ImageEnhance.Brightness(self.image)
         self.image = enhancer.enhance(bright)
+
+    def getfileName(self):
+        return self.path
 
 
 def main():
