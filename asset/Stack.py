@@ -30,7 +30,7 @@ class Stack:
             self.last = self.last
         else:
             self.last = self.last
-        print(self.last)
+        # print(self.last)
         return self.getCurrent()
 
     def redo(self):
@@ -40,7 +40,7 @@ class Stack:
             self.last = self.last
         else:
             self.last = self.last
-        print(self.last)
+        # print(self.last)
         return self.getCurrent()
 
     def getSize(self):
