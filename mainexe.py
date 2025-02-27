@@ -364,12 +364,12 @@ class TKGUI:
         self.palette = "_internal\\asset\\testPremadePalette.png"
 
     def undoRedoChange(self):
-        print("U", self.imageStack.last, self.imageStack.getSize())
+        # print("U", self.imageStack.last, self.imageStack.getSize())
         if self.imageStack.getSize() == 0 or self.imageStack.last == 0:
             self.undoB.config(state=tk.DISABLED)
         else:
             self.undoB.config(state=tk.NORMAL)
-        print("R", self.imageStack.last, self.imageStack.getSize())
+        # print("R", self.imageStack.last, self.imageStack.getSize())
         if self.imageStack.getSize() == 0 or self.imageStack.last == self.imageStack.getSize() - 1:
             self.redoB.config(state=tk.DISABLED)
         else:
