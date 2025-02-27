@@ -2,8 +2,8 @@ import tkinter as tk
 from tkinter import filedialog
 import os
 
-from ImageForRender import *
-from Stack import *
+from asset.ImageForRender import *
+from asset.Stack import *
 
 
 class TKGUI:
