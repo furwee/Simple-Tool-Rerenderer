@@ -110,7 +110,7 @@ class ImageRender:
                 # print(palette[i])
                 paletteIMG.putpixel((i, 0), palette[i])
 
-            paletteIMG.save("Asset\\testPalette.png")
+            paletteIMG.save("_internal\\Asset\\testPalette.png")
             return paletteAsArray
         except ValueError:
             print("palette issue")

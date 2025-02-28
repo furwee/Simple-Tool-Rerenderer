@@ -2,7 +2,7 @@ import tkinter as tk
 from tkinter import filedialog
 import os
 
-from asset.ImageForRender import *
+from asset.ImageForRenderexe import *
 from asset.Stack import *
 
 
