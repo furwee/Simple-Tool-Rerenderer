@@ -7,19 +7,13 @@ class Stack:
         self.last = len(self.list2stack) - 1
 
     def push(self, item=None):
-        if self.last <= 32:
+        if self.last <= 8:
             self.list2stack.append(item)
             self.last += 1
         else:
-            self.dequeue()
+            self.list2stack.pop(0)
             self.list2stack.append(item)
-        # print(self.last)
-
-    def pop(self):
-        self.list2stack = self.list2stack[:self.last-1]
-
-    def dequeue(self):
-        self.list2stack = self.list2stack.remove(0)
+        print(self.list2stack)
 
     def getCurrent(self):
         return self.list2stack[self.last]
