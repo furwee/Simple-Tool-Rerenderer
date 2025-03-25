@@ -261,6 +261,7 @@ class TKGUI:
         # pic.medianFilter()
         # pic.sharpen(self.sharpnessV)
         pic.enhanceBrightness(self.brightnessV)
+        pic.crop()
         pic.scale(self.scaleV)
         pic.crop()
         self.imageStack.push([pic, [pic.getfileName(), self.tgtSize.get(), self.colour.get(), self.shadeCount.get(), self.brightness.get(),
