@@ -126,16 +126,8 @@ class ImageRender:
         k = 0
         # print(self.getArea())
         for i in range(0, self.getHeight()):
-            for j in range(0, self.getWidth() - 1):
+            for j in range(0, self.getWidth()):
                 newIMG.putpixel((j, i), newImgTU[k])
-                # print(k, newImgTU[k])
-                if k == self.getArea():
-                    break
-                else:
-                    k += 1
-            if k == self.getArea():
-                break
-            else:
                 k += 1
         self.image = newIMG
 
