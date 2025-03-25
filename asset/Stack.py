@@ -1,3 +1,6 @@
+import os
+
+
 class Stack:
     def __init__(self, list2stack):
         if list2stack is None:
@@ -11,7 +14,7 @@ class Stack:
             self.list2stack.append(item)
             self.last += 1
         else:
-            self.list2stack.pop(0)
+            os.remove(self.pop()[1][0])
             self.list2stack.append(item)
         print(self.list2stack)
 
@@ -39,6 +42,12 @@ class Stack:
 
     def getSize(self):
         return len(self.list2stack)
+
+    def pop(self):
+        getCur = self.list2stack[0]
+        print(getCur)
+        self.list2stack.pop(0)
+        return getCur
 
 
 def main():

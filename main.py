@@ -200,13 +200,13 @@ class TKGUI:
         pic.medianFilter()
         pic.sharpen(self.sharpnessV)
         pic.enhanceBrightness(self.brightnessV)
-        pic.crop()
+
         pic.scale(self.scaleV)
         self.imageStack.push(
             [pic, [pic.getfileName(), self.tgtSize.get(), self.colour.get(), self.shadeCount.get(), self.brightness.get(),
                    self.sharpness.get(), self.scale.get()]])
 
-        pic.crop()
+
         picTK = pic.convertTK()
         self.newIMGDisp.config(image=picTK)
         self.newIMGDisp.Image = picTK
@@ -239,12 +239,12 @@ class TKGUI:
         pic.medianFilter()
         pic.sharpen(self.sharpnessV)
         pic.enhanceBrightness(self.brightnessV)
-        pic.crop()
+
         pic.scale(self.scaleV)
         self.imageStack.push(
             [pic, [pic.getfileName(), self.tgtSize.get(), self.colour.get(), self.shadeCount.get(), self.brightness.get(),
                    self.sharpness.get(), self.scale.get()]])
-        pic.crop()
+
         picTK = pic.convertTK()
         self.newIMGDisp.config(image=picTK)
         self.newIMGDisp.Image = picTK
@@ -261,9 +261,9 @@ class TKGUI:
         # pic.medianFilter()
         # pic.sharpen(self.sharpnessV)
         pic.enhanceBrightness(self.brightnessV)
-        pic.crop()
+
         pic.scale(self.scaleV)
-        pic.crop()
+
         self.imageStack.push([pic, [pic.getfileName(), self.tgtSize.get(), self.colour.get(), self.shadeCount.get(), self.brightness.get(),
                                     self.sharpness.get(), self.scale.get()]])
         # print(self.imageStack.list2stack)
@@ -384,7 +384,8 @@ def main():
         pass
     finally:
         rootTK = tk.Tk()
-        rootTK.resizable(False, False)
+        rootTK.minsize(600, 600)
+        # rootTK.resizable(False, False)
         rootTK.iconbitmap("asset\\STR_Logo_PA.ico")
         TKGUI(rootTK)
         rootTK.mainloop()
