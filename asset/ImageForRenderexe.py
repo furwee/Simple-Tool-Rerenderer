@@ -50,12 +50,12 @@ class ImageRender:
                                            Image.Resampling.NEAREST)
         return self.image
 
-    def resize(self, dispSize=128):
+    def resize(self, targetSize=128):
         if "png" in self.path:
             self.convertRGB()
-        if dispSize > 0:
-            self.image = self.image.resize((int((self.getWidth() / (self.getWidth() / dispSize))),
-                                            int(self.getHeight() / (self.getWidth() / dispSize))),
+        if targetSize > 0:
+            self.image = self.image.resize((int((self.getWidth() / (self.getWidth() / targetSize))),
+                                            int(self.getHeight() / (self.getWidth() / targetSize))),
                                            Image.Resampling.LANCZOS)
         return self.image
 

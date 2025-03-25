@@ -1,6 +1,5 @@
 import tkinter as tk
 from tkinter import filedialog
-import os
 
 from asset.ImageForRender import *
 from asset.Stack import *
@@ -205,7 +204,6 @@ class TKGUI:
         self.imageStack.push(
             [pic, [pic.getfileName(), self.tgtSize.get(), self.colour.get(), self.shadeCount.get(), self.brightness.get(),
                    self.sharpness.get(), self.scale.get()]])
-
 
         picTK = pic.convertTK()
         self.newIMGDisp.config(image=picTK)
