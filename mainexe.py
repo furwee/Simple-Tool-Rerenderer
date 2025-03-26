@@ -157,7 +157,6 @@ class TKGUI:
         if self.openFilePath:
             self.undoRedoChange()
             pic = ImageRender(self.openFilePath)
-            pic.medianFilter()
             pic.resize(self.dispSize)
             pic.save(f"cache\\Saved({self.k}).png")
             pic = ImageRender(f"cache\\Saved({self.k}).png")
@@ -185,15 +184,15 @@ class TKGUI:
         self.newIMG = ImageRender(self.openFilePath)
         pic = self.newIMG
         pic.convertRGB()
-        pic.medianFilter()
         # pic.resizeNT(targetSize=self.tgtSizeV)
         pic.resize(self.tgtSizeV)
         pic.sharpen(self.sharpnessV)
         pic2 = pic
         pic2 = pic2.palette(colour=self.colourV, shadeCount=self.shadeCountV)
-        pic.convertPart(pic2)
+        pic.convertPartPPM(pic2)
         pic.save(f"cache\\Saved({self.k}).png")
         pic = ImageRender(f"cache\\Saved({self.k}).png")
+        pic.medianFilter()
         pic.sharpen(self.sharpnessV)
         pic.enhanceBrightness(self.brightnessV)
 
@@ -223,13 +222,14 @@ class TKGUI:
         pic = self.newIMG
         pic.convertRGB()
         pic.colorLvl(2)
-        # pic.resizeNT(targetSize=self.tgtSizeV)
+        # resizeNT(targetSize=self.tgtSizeV)
         pic.resize(self.tgtSizeV)
         pic.sharpen(self.sharpnessV)
         pic2 = ImageRender(self.palette).convertNP()
-        pic.convertPart(pic2)
+        pic.convertPartPPM(pic2)
         pic.save(f"cache\\Saved({self.k}).png")
         pic = ImageRender(f"cache\\Saved({self.k}).png")
+        pic.medianFilter()
         pic.sharpen(self.sharpnessV)
         pic.enhanceBrightness(self.brightnessV)
 
