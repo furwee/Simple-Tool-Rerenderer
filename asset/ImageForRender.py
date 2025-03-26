@@ -96,9 +96,6 @@ class ImageRender:
         self.convertRGB()
         return np.array(self.image).reshape(-1, 3)
 
-    def ditherFloyd(self):
-        self.image = self.image.convert(dither=Image.Dither.FLOYDSTEINBERG)
-
     def palette(self, colour, shadeCount):
         try:
             palette = generatePalette(self.domColour(colour), shadeCount)[1]
@@ -168,7 +165,7 @@ class ImageRender:
             return self.image
 
     def medianFilter(self):
-        self.image = self.image.filter(ImageFilter.MedianFilter(size=1))
+        self.image = self.image.filter(ImageFilter.MedianFilter)
 
     def sharpen(self, sharp):
         enhancer = ImageEnhance.Sharpness(self.image)
