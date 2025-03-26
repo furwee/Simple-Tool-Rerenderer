@@ -187,7 +187,7 @@ class TKGUI:
         self.newIMG = ImageRender(self.openFilePath)
         pic = self.newIMG
         pic.convertRGB()
-        pic.medianfilter()
+        pic.medianFilter()
         # pic.resizeNT(targetSize=self.tgtSizeV)
         pic.resize(self.tgtSizeV)
         pic.sharpen(self.sharpnessV)
