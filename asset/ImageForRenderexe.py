@@ -96,9 +96,6 @@ class ImageRender:
         self.convertRGB()
         return np.array(self.image).reshape(-1, 3)
 
-    def ditherFloyd(self):
-        self.image = self.image.convert(dither=Image.Dither.FLOYDSTEINBERG)
-
     def palette(self, colour, shadeCount):
         try:
             palette = generatePalette(self.domColour(colour), shadeCount)[1]
@@ -114,6 +111,19 @@ class ImageRender:
             return paletteAsArray
         except ValueError:
             print("palette issue")
+
+    def convertPartPPM(self, paletteArr):
+        imgArr = self.convertNP()
+        newImgArr = self.changeImageColour(imgArr, paletteArr)
+        newIMGLi = newImgArr.flatten().tolist()
+        ppmHeader = f"P6 {self.getWidth()} {self.getHeight()} 255\n"
+        newIMGPPMArr = array.array('B', newIMGLi)
+        ppm = open('asset\\hidden.ppm', 'wb')
+        ppm.write(bytearray(ppmHeader, 'ascii'))
+        newIMGPPMArr.tofile(ppm)
+        ppm.close()
+        newIMGPPM = Image.open("asset\\hidden.ppm")
+        self.image = newIMGPPM
 
     def convertPart(self, paletteArr):
         imgArr = self.convertNP()
@@ -167,7 +177,7 @@ class ImageRender:
             return self.image
 
     def medianFilter(self):
-        self.image = self.image.filter(ImageFilter.MedianFilter(size=1))
+        self.image = self.image.filter(ImageFilter.MedianFilter)
 
     def sharpen(self, sharp):
         enhancer = ImageEnhance.Sharpness(self.image)
