@@ -1,7 +1,5 @@
 import tkinter as tk
 from tkinter import filedialog
-import os
-
 from asset.ImageForRenderexe import *
 from asset.Stack import *
 
@@ -193,7 +191,7 @@ class TKGUI:
         pic.sharpen(self.sharpnessV)
         pic2 = pic
         pic2 = pic2.palette(colour=self.colourV, shadeCount=self.shadeCountV)
-        pic.convertPart(pic2)
+        pic.convertPartPPM(pic2)
         pic.save(f"cache\\Saved({self.k}).png")
         pic = ImageRender(f"cache\\Saved({self.k}).png")
         pic.sharpen(self.sharpnessV)
@@ -229,7 +227,7 @@ class TKGUI:
         pic.resize(self.tgtSizeV)
         pic.sharpen(self.sharpnessV)
         pic2 = ImageRender(self.palette).convertNP()
-        pic.convertPart(pic2)
+        pic.convertPartPPM(pic2)
         pic.save(f"cache\\Saved({self.k}).png")
         pic = ImageRender(f"cache\\Saved({self.k}).png")
         pic.sharpen(self.sharpnessV)

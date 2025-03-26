@@ -1,4 +1,5 @@
 import colorsys
+from array import array
 from collections import Counter
 
 import numpy as np
@@ -111,6 +112,19 @@ class ImageRender:
             return paletteAsArray
         except ValueError:
             print("palette issue")
+
+    def convertPartPPM(self, paletteArr):
+        imgArr = self.convertNP()
+        newImgArr = self.changeImageColour(imgArr, paletteArr)
+        newIMGLi = newImgArr.flatten().tolist()
+        ppmHeader = f"P6 {self.getWidth()} {self.getHeight()} 255\n"
+        newIMGPPMArr = array('B', newIMGLi)
+        ppm = open('_internal\\asset\\hidden.ppm', 'wb')
+        ppm.write(bytearray(ppmHeader, 'ascii'))
+        newIMGPPMArr.tofile(ppm)
+        ppm.close()
+        newIMGPPM = Image.open("_internal\\asset\\hidden.ppm")
+        self.image = newIMGPPM
 
     def convertPart(self, paletteArr):
         imgArr = self.convertNP()

@@ -1,3 +1,4 @@
+import array
 import colorsys
 from collections import Counter
 
@@ -112,21 +113,31 @@ class ImageRender:
         except ValueError:
             print("palette issue")
 
+    def convertPartPPM(self, paletteArr):
+        imgArr = self.convertNP()
+        newImgArr = self.changeImageColour(imgArr, paletteArr)
+        newIMGLi = newImgArr.flatten().tolist()
+        ppmHeader = f"P6 {self.getWidth()} {self.getHeight()} 255\n"
+        newIMGPPMArr = array.array('B', newIMGLi)
+        ppm = open('asset\\hidden.ppm', 'wb')
+        ppm.write(bytearray(ppmHeader, 'ascii'))
+        newIMGPPMArr.tofile(ppm)
+        ppm.close()
+        newIMGPPM = Image.open("asset\\hidden.ppm")
+        self.image = newIMGPPM
+
     def convertPart(self, paletteArr):
         imgArr = self.convertNP()
         newImgArr = self.changeImageColour(imgArr, paletteArr)
         newIMG = Image.new("RGB", (self.getWidth(), self.getHeight()))
         # print(newImgArr)
         newImgTU = tuple(map(tuple, newImgArr))
-
-        # print(len(newImgTU))
         k = 0
-        # print(self.getArea())
         for i in range(0, self.getHeight()):
             for j in range(0, self.getWidth()):
                 newIMG.putpixel((j, i), newImgTU[k])
                 k += 1
-                # print(k, newImgTU[k])
+        #        print(k, newImgTU[k])
         self.image = newIMG
 
     def crop(self):
