@@ -1,4 +1,5 @@
 import colorsys
+from array import array
 from collections import Counter
 
 import numpy as np
@@ -117,12 +118,12 @@ class ImageRender:
         newImgArr = self.changeImageColour(imgArr, paletteArr)
         newIMGLi = newImgArr.flatten().tolist()
         ppmHeader = f"P6 {self.getWidth()} {self.getHeight()} 255\n"
-        newIMGPPMArr = array.array('B', newIMGLi)
-        ppm = open('asset\\hidden.ppm', 'wb')
+        newIMGPPMArr = array('B', newIMGLi)
+        ppm = open('_internal\\asset\\hidden.ppm', 'wb')
         ppm.write(bytearray(ppmHeader, 'ascii'))
         newIMGPPMArr.tofile(ppm)
         ppm.close()
-        newIMGPPM = Image.open("asset\\hidden.ppm")
+        newIMGPPM = Image.open("_internal\\asset\\hidden.ppm")
         self.image = newIMGPPM
 
     def convertPart(self, paletteArr):
