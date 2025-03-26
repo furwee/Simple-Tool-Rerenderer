@@ -221,7 +221,8 @@ class TKGUI:
         self.newIMG = ImageRender(self.openFilePath)
         pic = self.newIMG
         pic.convertRGB()
-        # .resizeNT(targetSize=self.tgtSizeV)
+        pic.colorLvl(2)
+        # resizeNT(targetSize=self.tgtSizeV)
         pic.resize(self.tgtSizeV)
         pic.sharpen(self.sharpnessV)
         pic2 = ImageRender(self.palette).convertNP()

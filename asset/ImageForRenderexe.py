@@ -184,6 +184,10 @@ class ImageRender:
         enhancer = ImageEnhance.Sharpness(self.image)
         self.image = enhancer.enhance(sharp)
 
+    def colorLvl(self, colorlvl):
+        enhancer = ImageEnhance.Color(self.image)
+        self.image = enhancer.enhance(colorlvl)
+
     def enhanceBrightness(self, bright):
         enhancer = ImageEnhance.Brightness(self.image)
         self.image = enhancer.enhance(bright)
