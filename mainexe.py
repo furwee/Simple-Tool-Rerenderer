@@ -252,9 +252,52 @@ class TKGUI:
         # pic.medianFilter()
         # pic.sharpen(self.sharpnessV)
         pic.enhanceBrightness(self.brightnessV)
+        pic.sharpen(self.sharpnessV)
         pic.scale(self.scaleV)
 
         self.imageStack.push([pic, [pic.getfileName(), self.tgtSize.get(), self.colour.get(), self.shadeCount.get(), self.brightness.get(),
+                                    self.sharpness.get(), self.scale.get()]])
+        # print(self.imageStack.list2stack)
+        picTK = pic.convertTK()
+        self.newIMGDisp.config(image=picTK)
+        self.newIMGDisp.Image = picTK
+        self.newIMGLabel.config(text=pic.getSize())
+        self.newIMG.Text = pic.getSize()
+        self.newIMG = pic
+
+    def brightC(self):
+        self.undoRedoChange()
+        self.brightnessV = float(self.brightness.get())
+        pic = ImageRender(self.newIMG.getfileName())
+        # pic.medianFilter()
+        # pic.sharpen(self.sharpnessV)
+        pic.enhanceBrightness(self.brightnessV)
+        pic.sharpen(self.sharpnessV)
+        pic.scale(self.scaleV)
+
+        self.imageStack.push([pic, [pic.getfileName(), self.tgtSize.get(), self.colour.get(), self.shadeCount.get(),
+                                    self.brightness.get(),
+                                    self.sharpness.get(), self.scale.get()]])
+        # print(self.imageStack.list2stack)
+        picTK = pic.convertTK()
+        self.newIMGDisp.config(image=picTK)
+        self.newIMGDisp.Image = picTK
+        self.newIMGLabel.config(text=pic.getSize())
+        self.newIMG.Text = pic.getSize()
+        self.newIMG = pic
+
+    def sharpC(self):
+        self.undoRedoChange()
+        self.sharpnessV = float(self.sharpness.get())
+        pic = ImageRender(self.newIMG.getfileName())
+        # pic.medianFilter()
+        # pic.sharpen(self.sharpnessV)
+        pic.enhanceBrightness(self.brightnessV)
+        pic.sharpen(self.sharpnessV)
+        pic.scale(self.scaleV)
+
+        self.imageStack.push([pic, [pic.getfileName(), self.tgtSize.get(), self.colour.get(), self.shadeCount.get(),
+                                    self.brightness.get(),
                                     self.sharpness.get(), self.scale.get()]])
         # print(self.imageStack.list2stack)
         picTK = pic.convertTK()
