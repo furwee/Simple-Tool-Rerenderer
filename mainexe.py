@@ -181,7 +181,7 @@ class TKGUI:
             self.originalIMGLabel.config(text=filePath)
 
     def saveImage(self):
-        filePath = filedialog.asksaveasfilename(filetypes=[("Image files", "*.png;*.jpg;*.jpeg;*.bmp;*.gif")])
+        filePath = filedialog.asksaveasfilename(filetypes=[("Image files", ".png")])
         self.imageStack.getCurrent()[0].save(filePath)
         # self.newIMG.show()
 
@@ -212,7 +212,7 @@ class TKGUI:
 
         pic.scale(self.scaleV)
         self.imageStack.push(
-            [pic, [pic.getfileName(), self.tgtSize.get(), self.colour.get(), self.shadeCount.get(), self.brightness.get(),
+            [pic, [pic.getfileName(), self.tgtSize.get(), self.colour.get(), self.shadeCount.get(), self.hue.get(), self.brightness.get(),
                    self.sharpness.get(), self.scale.get()]])
 
         picTK = pic.convertTK()
@@ -247,7 +247,7 @@ class TKGUI:
 
         pic.scale(self.scaleV)
         self.imageStack.push(
-            [pic, [pic.getfileName(), self.tgtSize.get(), self.colour.get(), self.shadeCount.get(), self.brightness.get(),
+            [pic, [pic.getfileName(), self.tgtSize.get(), self.colour.get(), self.shadeCount.get(), self.hue.get(), self.brightness.get(),
                    self.sharpness.get(), self.scale.get()]])
 
         picTK = pic.convertTK()
@@ -269,7 +269,7 @@ class TKGUI:
         pic.sharpen(self.sharpnessV)
         pic.scale(self.scaleV)
 
-        self.imageStack.push([pic, [pic.getfileName(), self.tgtSize.get(), self.colour.get(), self.shadeCount.get(), self.brightness.get(),
+        self.imageStack.push([pic, [pic.getfileName(), self.tgtSize.get(), self.colour.get(), self.shadeCount.get(), self.hue.get(), self.brightness.get(),
                                     self.sharpness.get(), self.scale.get()]])
         # print(self.imageStack.list2stack)
         picTK = pic.convertTK()
@@ -290,7 +290,7 @@ class TKGUI:
         pic.scale(self.scaleV)
 
         self.imageStack.push([pic, [pic.getfileName(), self.tgtSize.get(), self.colour.get(), self.shadeCount.get(),
-                                    self.brightness.get(),
+                                    self.hue.get(), self.brightness.get(),
                                     self.sharpness.get(), self.scale.get()]])
         # print(self.imageStack.list2stack)
         picTK = pic.convertTK()
@@ -311,7 +311,7 @@ class TKGUI:
         pic.scale(self.scaleV)
 
         self.imageStack.push([pic, [pic.getfileName(), self.tgtSize.get(), self.colour.get(), self.shadeCount.get(),
-                                    self.brightness.get(),
+                                    self.hue.get(), self.brightness.get(),
                                     self.sharpness.get(), self.scale.get()]])
         # print(self.imageStack.list2stack)
         picTK = pic.convertTK()
