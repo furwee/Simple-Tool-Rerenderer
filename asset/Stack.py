@@ -16,7 +16,7 @@ class Stack:
         else:
             self.popS()
             self.list2stack.append(item)
-        print(self.list2stack)
+        print(self.last)
 
     def getCurrent(self):
         return self.list2stack[self.last]
@@ -27,7 +27,8 @@ class Stack:
             self.last = self.last
         else:
             self.last = self.last
-        # print(self.last)
+        print(self.last)
+        print(self.list2stack[0])
         return self.getCurrent()
 
     def redo(self):
