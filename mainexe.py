@@ -185,9 +185,8 @@ class TKGUI:
         self.newIMG = ImageRender(self.openFilePath)
         pic = self.newIMG
         pic.convertRGB()
-        pic.medianFilter()
         # pic.resizeNT(targetSize=self.tgtSizeV)
-        pic.resize(self.tgtSizeV)
+        pic.resizeLC(self.tgtSizeV)
         pic.sharpen(self.sharpnessV)
         pic2 = pic
         pic2 = pic2.palette(colour=self.colourV, shadeCount=self.shadeCountV)
@@ -222,9 +221,8 @@ class TKGUI:
         self.newIMG = ImageRender(self.openFilePath)
         pic = self.newIMG
         pic.convertRGB()
-        pic.colorLvl(2)
         # pic.resizeNT(targetSize=self.tgtSizeV)
-        pic.resize(self.tgtSizeV)
+        pic.resizeLC(self.tgtSizeV)
         pic.sharpen(self.sharpnessV)
         pic2 = ImageRender(self.palette).convertNP()
         pic.convertPartPPM(pic2)
