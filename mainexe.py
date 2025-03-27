@@ -228,7 +228,6 @@ class TKGUI:
         pic.convertPartPPM(pic2)
         pic.save(f"cache\\Saved({self.k}).png")
         pic = ImageRender(f"cache\\Saved({self.k}).png")
-        pic.medianFilter()
         pic.sharpen(self.sharpnessV)
         pic.enhanceBrightness(self.brightnessV)
 
