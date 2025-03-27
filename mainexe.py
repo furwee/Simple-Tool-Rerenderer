@@ -171,7 +171,7 @@ class TKGUI:
             self.undoRedoChange()
             pic = ImageRender(self.openFilePath)
             pic.medianFilter()
-            pic.resize(self.dispSize)
+            pic.resizeNT(self.dispSize)
             pic.save(f"cache\\Saved({self.k}).png")
             pic = ImageRender(f"cache\\Saved({self.k}).png")
             filePath = filePath + str(pic.getSize())
