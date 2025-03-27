@@ -1,8 +1,9 @@
 import tkinter as tk
 from tkinter import filedialog
-
+from time import *
 from asset.ImageForRender import *
 from asset.Stack import *
+import os
 
 
 class TKGUI:
@@ -186,13 +187,17 @@ class TKGUI:
         self.newIMG = ImageRender(self.openFilePath)
         pic = self.newIMG
         pic.convertRGB()
-        pic.medianFilter()
+        pic.medianfilter()
         # pic.resizeNT(targetSize=self.tgtSizeV)
         pic.resize(self.tgtSizeV)
         pic.sharpen(self.sharpnessV)
         pic2 = pic
         pic2 = pic2.palette(colour=self.colourV, shadeCount=self.shadeCountV)
-        pic.convertPart(pic2)
+        np.sort(pic2)
+        strt = time()
+        pic.convertPartPPM(pic2)
+        end = time()
+        print(end - strt)
         pic.save(f"cache\\Saved({self.k}).png")
         pic = ImageRender(f"cache\\Saved({self.k}).png")
         pic.sharpen(self.sharpnessV)
@@ -227,7 +232,10 @@ class TKGUI:
         pic.resize(self.tgtSizeV)
         pic.sharpen(self.sharpnessV)
         pic2 = ImageRender(self.palette).convertNP()
-        pic.convertPart(pic2)
+        strt = time()
+        pic.convertPartPPM(pic2)
+        end = time()
+        print(end - strt)
         pic.save(f"cache\\Saved({self.k}).png")
         pic = ImageRender(f"cache\\Saved({self.k}).png")
         pic.sharpen(self.sharpnessV)
