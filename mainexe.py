@@ -107,7 +107,7 @@ class TKGUI:
         self.scale.grid(row=12, column=0, padx=5, pady=5)
 
         self.scaleC = tk.Button(self.frameIMGMID, text="scale", command=self.scaleS)
-        self.scaleC.grid(row=13, column=1, sticky=tk.W, padx=5, pady=5)
+        self.scaleC.grid(row=12, column=1, sticky=tk.W, padx=5, pady=5)
 
         self.newIMGDisp = tk.Label(self.frameMidHigh)
         self.newIMGDisp.grid(row=0, column=2, padx=5, pady=5)

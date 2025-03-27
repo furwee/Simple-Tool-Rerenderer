@@ -94,12 +94,18 @@ class TKGUI:
         self.brightnessV = int(self.shadeCount.get())
         self.brightness.grid(row=8, column=0, padx=5, pady=5)
 
+        self.bright = tk.Button(self.frameIMGMID, text="brighten", command=self.brightC)
+        self.bright.grid(row=8, column=1, sticky=tk.W, padx=5, pady=5)
+
         self.sharpnessL = tk.Label(self.frameIMGMID, text="sharpness (float)")
         self.sharpnessL.grid(row=9, column=0, padx=5, pady=5)
         self.sharpness = tk.Entry(self.frameIMGMID)
         self.sharpness.insert(0, "1")
         self.sharpnessV = int(self.shadeCount.get())
         self.sharpness.grid(row=10, column=0, padx=5, pady=5)
+
+        self.sharp = tk.Button(self.frameIMGMID, text="sharpen", command=self.sharpC)
+        self.sharp.grid(row=10, column=1, sticky=tk.W, padx=5, pady=5)
 
         self.scaleL = tk.Label(self.frameIMGMID, text="Scale")
         self.scaleL.grid(row=11, column=0, padx=5, pady=5)
@@ -109,7 +115,7 @@ class TKGUI:
         self.scale.grid(row=12, column=0, padx=5, pady=5)
 
         self.scaleC = tk.Button(self.frameIMGMID, text="scale", command=self.scaleS)
-        self.scaleC.grid(row=13, column=1, sticky=tk.W, padx=5, pady=5)
+        self.scaleC.grid(row=12, column=1, sticky=tk.W, padx=5, pady=5)
 
         self.newIMGDisp = tk.Label(self.frameMidHigh)
         self.newIMGDisp.grid(row=0, column=2, padx=5, pady=5)
@@ -262,7 +268,47 @@ class TKGUI:
         # pic.medianFilter()
         # pic.sharpen(self.sharpnessV)
         pic.enhanceBrightness(self.brightnessV)
+        pic.sharpen(self.sharpnessV)
+        pic.scale(self.scaleV)
 
+        self.imageStack.push([pic, [pic.getfileName(), self.tgtSize.get(), self.colour.get(), self.shadeCount.get(), self.brightness.get(),
+                                    self.sharpness.get(), self.scale.get()]])
+        # print(self.imageStack.list2stack)
+        picTK = pic.convertTK()
+        self.newIMGDisp.config(image=picTK)
+        self.newIMGDisp.Image = picTK
+        self.newIMGLabel.config(text=pic.getSize())
+        self.newIMG.Text = pic.getSize()
+        self.newIMG = pic
+
+    def brightC(self):
+        self.undoRedoChange()
+        self.brightnessV = float(self.brightness.get())
+        pic = ImageRender(self.newIMG.getfileName())
+        # pic.medianFilter()
+        # pic.sharpen(self.sharpnessV)
+        pic.enhanceBrightness(self.brightnessV)
+        pic.sharpen(self.sharpnessV)
+        pic.scale(self.scaleV)
+
+        self.imageStack.push([pic, [pic.getfileName(), self.tgtSize.get(), self.colour.get(), self.shadeCount.get(), self.brightness.get(),
+                                    self.sharpness.get(), self.scale.get()]])
+        # print(self.imageStack.list2stack)
+        picTK = pic.convertTK()
+        self.newIMGDisp.config(image=picTK)
+        self.newIMGDisp.Image = picTK
+        self.newIMGLabel.config(text=pic.getSize())
+        self.newIMG.Text = pic.getSize()
+        self.newIMG = pic
+
+    def sharpC(self):
+        self.undoRedoChange()
+        self.sharpnessV = float(self.sharpness.get())
+        pic = ImageRender(self.newIMG.getfileName())
+        # pic.medianFilter()
+        # pic.sharpen(self.sharpnessV)
+        pic.enhanceBrightness(self.brightnessV)
+        pic.sharpen(self.sharpnessV)
         pic.scale(self.scaleV)
 
         self.imageStack.push([pic, [pic.getfileName(), self.tgtSize.get(), self.colour.get(), self.shadeCount.get(), self.brightness.get(),

@@ -10,11 +10,11 @@ class Stack:
         self.last = len(self.list2stack) - 1
 
     def push(self, item=None):
-        if self.last <= 8:
+        if self.last < 8:
             self.list2stack.append(item)
             self.last += 1
         else:
-            os.remove(self.pop()[1][0])
+            self.popS()
             self.list2stack.append(item)
         print(self.list2stack)
 
@@ -43,10 +43,11 @@ class Stack:
     def getSize(self):
         return len(self.list2stack)
 
-    def pop(self):
+    def popS(self):
         getCur = self.list2stack[0]
         print(getCur)
         self.list2stack.pop(0)
+        os.remove(getCur[1][0])
         return getCur
 
 
