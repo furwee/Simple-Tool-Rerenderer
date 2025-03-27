@@ -417,7 +417,7 @@ class TKGUI:
         self.sharpness.insert(0, "1")
         self.scale.delete(0, 'end')
         self.scale.insert(0, "4")
-        self.palette = "asset\\testPremadePalette.png"
+        self.palette = "_internal\\asset\\testPremadePalette.png"
 
     def undoRedoChange(self):
         # print("U", self.imageStack.last, self.imageStack.getSize())
