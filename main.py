@@ -159,6 +159,7 @@ class TKGUI:
         if self.openFilePath:
             self.undoRedoChange()
             pic = ImageRender(self.openFilePath)
+            pic.medianFilter()
             pic.resize(self.dispSize)
             pic.save(f"cache\\Saved({self.k}).png")
             pic = ImageRender(f"cache\\Saved({self.k}).png")
@@ -186,6 +187,7 @@ class TKGUI:
         self.newIMG = ImageRender(self.openFilePath)
         pic = self.newIMG
         pic.convertRGB()
+        pic.medianfilter()
         # pic.resizeNT(targetSize=self.tgtSizeV)
         pic.resize(self.tgtSizeV)
         pic.sharpen(self.sharpnessV)
