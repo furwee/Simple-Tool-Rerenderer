@@ -87,35 +87,42 @@ class TKGUI:
         self.shadeCountV = int(self.shadeCount.get())
         self.shadeCount.grid(row=6, column=0, padx=5, pady=5)
 
+        self.hueL = tk.Label(self.frameIMGMID, text="hue (0-360)*, -1 for no hue change")
+        self.hueL.grid(row=7, column=0, padx=5, pady=5)
+        self.hue = tk.Entry(self.frameIMGMID)
+        self.hue.insert(0, "0")
+        self.hueV = float(self.hue.get())
+        self.hue.grid(row=8, column=0, padx=5, pady=5)
+
         self.brightnessL = tk.Label(self.frameIMGMID, text="brightness (float)")
-        self.brightnessL.grid(row=7, column=0, padx=5, pady=5)
+        self.brightnessL.grid(row=9, column=0, padx=5, pady=5)
         self.brightness = tk.Entry(self.frameIMGMID)
         self.brightness.insert(0, "1")
-        self.brightnessV = int(self.shadeCount.get())
-        self.brightness.grid(row=8, column=0, padx=5, pady=5)
+        self.brightnessV = int(self.brightness.get())
+        self.brightness.grid(row=10, column=0, padx=5, pady=5)
 
         self.bright = tk.Button(self.frameIMGMID, text="brighten", command=self.brightC)
-        self.bright.grid(row=8, column=1, sticky=tk.W, padx=5, pady=5)
+        self.bright.grid(row=10, column=1, sticky=tk.W, padx=5, pady=5)
 
         self.sharpnessL = tk.Label(self.frameIMGMID, text="sharpness (float)")
-        self.sharpnessL.grid(row=9, column=0, padx=5, pady=5)
+        self.sharpnessL.grid(row=11, column=0, padx=5, pady=5)
         self.sharpness = tk.Entry(self.frameIMGMID)
         self.sharpness.insert(0, "1")
-        self.sharpnessV = int(self.shadeCount.get())
-        self.sharpness.grid(row=10, column=0, padx=5, pady=5)
+        self.sharpnessV = int(self.sharpness.get())
+        self.sharpness.grid(row=12, column=0, padx=5, pady=5)
 
         self.sharp = tk.Button(self.frameIMGMID, text="sharpen", command=self.sharpC)
-        self.sharp.grid(row=10, column=1, sticky=tk.W, padx=5, pady=5)
+        self.sharp.grid(row=12, column=1, sticky=tk.W, padx=5, pady=5)
 
         self.scaleL = tk.Label(self.frameIMGMID, text="Scale")
-        self.scaleL.grid(row=11, column=0, padx=5, pady=5)
+        self.scaleL.grid(row=13, column=0, padx=5, pady=5)
         self.scale = tk.Entry(self.frameIMGMID)
         self.scale.insert(0, "1")
         self.scaleV = int(self.scale.get())
-        self.scale.grid(row=12, column=0, padx=5, pady=5)
+        self.scale.grid(row=14, column=0, padx=5, pady=5)
 
         self.scaleC = tk.Button(self.frameIMGMID, text="scale", command=self.scaleS)
-        self.scaleC.grid(row=12, column=1, sticky=tk.W, padx=5, pady=5)
+        self.scaleC.grid(row=14, column=1, sticky=tk.W, padx=5, pady=5)
 
         self.newIMGDisp = tk.Label(self.frameMidHigh)
         self.newIMGDisp.grid(row=0, column=2, padx=5, pady=5)
@@ -187,6 +194,7 @@ class TKGUI:
         self.brightnessV = float(self.brightness.get())
         self.sharpnessV = float(self.sharpness.get())
         self.scaleV = int(self.scale.get())
+        self.hueV = float(self.hue.get())
         img = ImageRender("asset\\test.jpg")
         self.newIMGDisp.config(image=img.convertTK())
         self.newIMGDisp.Image = None
@@ -197,7 +205,7 @@ class TKGUI:
         pic.resizeLC(self.tgtSizeV)
         pic.sharpen(self.sharpnessV)
         pic2 = pic
-        pic2 = pic2.palette(colour=self.colourV, shadeCount=self.shadeCountV)
+        pic2 = pic2.palette(colour=self.colourV, shadeCount=self.shadeCountV, hueV=self.hueV)
         np.sort(pic2)
         strt = time()
         pic.convertPartPPM(pic2)
@@ -210,7 +218,7 @@ class TKGUI:
 
         pic.scale(self.scaleV)
         self.imageStack.push(
-            [pic, [pic.getfileName(), self.tgtSize.get(), self.colour.get(), self.shadeCount.get(), self.brightness.get(),
+            [pic, [pic.getfileName(), self.tgtSize.get(), self.colour.get(), self.shadeCount.get(), self.hue.get(), self.brightness.get(),
                    self.sharpness.get(), self.scale.get()]])
 
         picTK = pic.convertTK()
@@ -249,7 +257,7 @@ class TKGUI:
 
         pic.scale(self.scaleV)
         self.imageStack.push(
-            [pic, [pic.getfileName(), self.tgtSize.get(), self.colour.get(), self.shadeCount.get(), self.brightness.get(),
+            [pic, [pic.getfileName(), self.tgtSize.get(), self.colour.get(), self.shadeCount.get(), self.hue.get(), self.brightness.get(),
                    self.sharpness.get(), self.scale.get()]])
 
         picTK = pic.convertTK()
@@ -271,7 +279,7 @@ class TKGUI:
         pic.sharpen(self.sharpnessV)
         pic.scale(self.scaleV)
 
-        self.imageStack.push([pic, [pic.getfileName(), self.tgtSize.get(), self.colour.get(), self.shadeCount.get(), self.brightness.get(),
+        self.imageStack.push([pic, [pic.getfileName(), self.tgtSize.get(), self.colour.get(), self.shadeCount.get(), self.hue.get(), self.brightness.get(),
                                     self.sharpness.get(), self.scale.get()]])
         # print(self.imageStack.list2stack)
         picTK = pic.convertTK()
@@ -291,7 +299,7 @@ class TKGUI:
         pic.sharpen(self.sharpnessV)
         pic.scale(self.scaleV)
 
-        self.imageStack.push([pic, [pic.getfileName(), self.tgtSize.get(), self.colour.get(), self.shadeCount.get(), self.brightness.get(),
+        self.imageStack.push([pic, [pic.getfileName(), self.tgtSize.get(), self.colour.get(), self.shadeCount.get(), self.hue.get(), self.brightness.get(),
                                     self.sharpness.get(), self.scale.get()]])
         # print(self.imageStack.list2stack)
         picTK = pic.convertTK()
@@ -311,7 +319,7 @@ class TKGUI:
         pic.sharpen(self.sharpnessV)
         pic.scale(self.scaleV)
 
-        self.imageStack.push([pic, [pic.getfileName(), self.tgtSize.get(), self.colour.get(), self.shadeCount.get(), self.brightness.get(),
+        self.imageStack.push([pic, [pic.getfileName(), self.tgtSize.get(), self.colour.get(), self.shadeCount.get(), self.hue.get(), self.brightness.get(),
                                     self.sharpness.get(), self.scale.get()]])
         # print(self.imageStack.list2stack)
         picTK = pic.convertTK()
@@ -331,9 +339,10 @@ class TKGUI:
         self.tgtSizeV = int(pic[1][1])
         self.colourV = int(pic[1][2])
         self.shadeCountV = int(pic[1][3])
-        self.brightnessV = float(pic[1][4])
-        self.sharpnessV = float(pic[1][5])
-        self.scaleV = int(pic[1][6])
+        self.hueV = float(pic[1][4])
+        self.brightnessV = float(pic[1][5])
+        self.sharpnessV = float(pic[1][6])
+        self.scaleV = int(pic[1][7])
         self.newIMG = ImageRender(pic[1][0])
         newIMGTK = self.newIMG
 
@@ -343,6 +352,8 @@ class TKGUI:
         self.tgtSize.insert(0, str(self.tgtSizeV))
         self.shadeCount.delete(0, 'end')
         self.shadeCount.insert(0, str(self.shadeCountV))
+        self.hue.delete(0, "end")
+        self.hue.insert(0, str(self.hueV))
         self.brightness.delete(0, 'end')
         self.brightness.insert(0, str(self.brightnessV))
         self.sharpness.delete(0, 'end')
@@ -368,9 +379,10 @@ class TKGUI:
         self.tgtSizeV = int(pic[1][1])
         self.colourV = int(pic[1][2])
         self.shadeCountV = int(pic[1][3])
-        self.brightnessV = float(pic[1][4])
-        self.sharpnessV = float(pic[1][5])
-        self.scaleV = int(pic[1][6])
+        self.hueV = int(pic[1][4])
+        self.brightnessV = float(pic[1][5])
+        self.sharpnessV = float(pic[1][6])
+        self.scaleV = int(pic[1][7])
         self.newIMG = ImageRender(pic[1][0])
         newIMGTK = self.newIMG
 
@@ -380,6 +392,8 @@ class TKGUI:
         self.tgtSize.insert(0, str(self.tgtSizeV))
         self.shadeCount.delete(0, 'end')
         self.shadeCount.insert(0, str(self.shadeCountV))
+        self.hue.delete(0, "end")
+        self.hue.insert(0, str(self.hueV))
         self.brightness.delete(0, 'end')
         self.brightness.insert(0, str(self.brightnessV))
         self.sharpness.delete(0, 'end')
@@ -403,6 +417,8 @@ class TKGUI:
         self.tgtSize.insert(0, "128")
         self.shadeCount.delete(0, 'end')
         self.shadeCount.insert(0, "8")
+        self.hue.delete(0, "end")
+        self.hue.insert(0,"0")
         self.brightness.delete(0, 'end')
         self.brightness.insert(0, "1")
         self.sharpness.delete(0, 'end')
