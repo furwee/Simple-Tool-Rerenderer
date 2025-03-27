@@ -14,8 +14,7 @@ class Stack:
             self.list2stack.append(item)
             self.last += 1
         else:
-            state = self.popS()
-            self.last -= 1 if state is False else True
+            self.popS()
             self.list2stack.append(item)
         print(self.list2stack)
 
@@ -52,8 +51,8 @@ class Stack:
             os.remove(getCur[1][0])
             return True
         else:
-            os.remove(self.list2stack[1][1][0])
-            return False
+            pass
+
 
 def main():
     pass
