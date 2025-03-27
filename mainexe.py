@@ -85,12 +85,11 @@ class TKGUI:
         self.shadeCountV = int(self.shadeCount.get())
         self.shadeCount.grid(row=6, column=0, padx=5, pady=5)
 
-
         self.hueL = tk.Label(self.frameIMGMID, text="hue (0-360)*, -1 for no hue change")
         self.hueL.grid(row=7, column=0, padx=5, pady=5)
         self.hue = tk.Entry(self.frameIMGMID)
         self.hue.insert(0, "0")
-        self.hueV = float(self.hue.get())
+        self.hueV = int(self.hue.get())
         self.hue.grid(row=8, column=0, padx=5, pady=5)
 
         self.brightnessL = tk.Label(self.frameIMGMID, text="brightness (float)")
@@ -190,6 +189,7 @@ class TKGUI:
         self.tgtSizeV = int(self.tgtSize.get())
         self.colourV = int(self.colour.get())
         self.shadeCountV = int(self.shadeCount.get())
+        self.hueV = int(self.hue.get())
         self.brightnessV = float(self.brightness.get())
         self.sharpnessV = float(self.sharpness.get())
         self.scaleV = int(self.scale.get())
@@ -203,7 +203,7 @@ class TKGUI:
         pic.resizeLC(self.tgtSizeV)
         pic.sharpen(self.sharpnessV)
         pic2 = pic
-        pic2 = pic2.palette(colour=self.colourV, shadeCount=self.shadeCountV)
+        pic2 = pic2.palette(colour=self.colourV, shadeCount=self.shadeCountV, hueV= self.hueV)
         pic.convertPartPPM(pic2)
         pic.save(f"cache\\Saved({self.k}).png")
         pic = ImageRender(f"cache\\Saved({self.k}).png")
@@ -331,7 +331,7 @@ class TKGUI:
         self.tgtSizeV = int(pic[1][1])
         self.colourV = int(pic[1][2])
         self.shadeCountV = int(pic[1][3])
-        self.hueV = float(pic[1][4])
+        self.hueV = int(pic[1][4])
         self.brightnessV = float(pic[1][5])
         self.sharpnessV = float(pic[1][6])
         self.scaleV = int(pic[1][7])
