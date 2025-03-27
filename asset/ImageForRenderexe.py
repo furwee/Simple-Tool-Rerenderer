@@ -168,6 +168,7 @@ class ImageRender:
             return paletteAsArray
         except ValueError:
             print("palette issue")
+            return ImageRender("asset\\testPremadePalette.png").convertNP()
 
     def convertPartPPM(self, paletteArr):
         imgArr = self.convertNP()
