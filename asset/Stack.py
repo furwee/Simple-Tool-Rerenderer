@@ -45,9 +45,9 @@ class Stack:
         return len(self.list2stack)
 
     def popS(self):
-        getCur = self.list2stack[0]
+        getCur = self.list2stack[1]
         print(getCur)
-        self.list2stack.pop(0)
+        self.list2stack.pop(1)
         if os.path.exists(getCur[1][0]):
             os.remove(getCur[1][0])
             return True
