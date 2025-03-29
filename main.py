@@ -165,18 +165,23 @@ class TKGUI:
             self.palette = path
 
     def openImage(self):
-        self.k += 1
+        self.k = 0
+        self.imageStack.last = 0
         self.originalIMGDisp.Image = None
         filePath = filedialog.askopenfilename(filetypes=[("Image files", "")])
         self.openFilePath = filePath
         if self.openFilePath:
             self.undoRedoChange()
             pic = ImageRender(self.openFilePath)
+            pic2 = pic
             pic.medianFilter()
             pic.resizeNT(self.dispSize)
-            pic.save(f"cache\\Saved({self.k}).png")
-            pic = ImageRender(f"cache\\Saved({self.k}).png")
-            filePath = filePath + str(pic.getSize())
+            pic.save(f"cache\\Saved(0).png")
+            self.imageStack.list2stack = (
+                [[pic, [f"cache\\Saved(0).png", self.tgtSize.get(), self.colour.get(), self.shadeCount.get(), self.hue.get(),
+                        self.brightness.get(),
+                        self.sharpness.get(), self.scale.get()]]])
+            filePath = filePath + str(pic2.getSize())
             picTK = pic.convertTK()
             self.originalIMGDisp.config(image=picTK)
             self.originalIMGDisp.Image = picTK
@@ -188,6 +193,7 @@ class TKGUI:
         # self.newIMG.show()
 
     def convertImageAdaptive(self):
+        self.k += 1
         self.tgtSizeV = int(self.tgtSize.get())
         self.colourV = int(self.colour.get())
         self.shadeCountV = int(self.shadeCount.get())
@@ -198,7 +204,8 @@ class TKGUI:
         img = ImageRender("asset\\test.jpg")
         self.newIMGDisp.config(image=img.convertTK())
         self.newIMGDisp.Image = None
-        self.newIMG = ImageRender(self.openFilePath)
+        print(self.imageStack.list2stack[0][1][0])
+        self.newIMG = ImageRender(self.imageStack.list2stack[0][1][0])
         pic = self.newIMG
         pic.convertRGB()
         # pic.resizeNT(targetSize=self.tgtSizeV)
@@ -207,9 +214,9 @@ class TKGUI:
         pic2 = pic
         pic2 = pic2.palette(colour=self.colourV, shadeCount=self.shadeCountV, hueV=self.hueV)
         np.sort(pic2)
-        strt = time()
+        strt = time.time()
         pic.convertPartPPM(pic2)
-        end = time()
+        end = time.time()
         print(end - strt)
         pic.save(f"cache\\Saved({self.k}).png")
         pic = ImageRender(f"cache\\Saved({self.k}).png")
@@ -218,7 +225,8 @@ class TKGUI:
 
         pic.scale(self.scaleV)
         self.imageStack.push(
-            [pic, [pic.getfileName(), self.tgtSize.get(), self.colour.get(), self.shadeCount.get(), self.hue.get(), self.brightness.get(),
+            [pic, [f"cache\\Saved({self.k}).png", self.tgtSize.get(), self.colour.get(), self.shadeCount.get(), self.hue.get(),
+                   self.brightness.get(),
                    self.sharpness.get(), self.scale.get()]])
 
         picTK = pic.convertTK()
@@ -227,10 +235,10 @@ class TKGUI:
         self.newIMGLabel.config(text=pic.getSize())
         self.newIMG.Text = pic.getSize()
         self.newIMG = pic
-        self.k += 1
         self.undoRedoChange()
 
     def convertImagePremade(self):
+        self.k += 1
         self.tgtSizeV = int(self.tgtSize.get())
         self.brightnessV = float(self.brightness.get())
         self.sharpnessV = float(self.sharpness.get())
@@ -238,17 +246,17 @@ class TKGUI:
         img = ImageRender("asset\\test.jpg")
         self.newIMGDisp.config(image=img.convertTK())
         self.newIMGDisp.Image = None
-        self.newIMG = ImageRender(self.openFilePath)
+        print(self.imageStack.list2stack[0][1][0])
+        self.newIMG = ImageRender(self.imageStack.list2stack[0][1][0])
         pic = self.newIMG
         pic.convertRGB()
         # pic.resizeNT(targetSize=self.tgtSizeV)
         pic.resizeLC(self.tgtSizeV)
         pic.sharpen(self.sharpnessV)
         pic2 = ImageRender(self.palette).convertNP()
-        strt = time()
+        strt = time.time()
         pic.convertPartPPM(pic2)
-        end = time()
-        print(end - strt)
+        print(time.time() - strt)
         pic.save(f"cache\\Saved({self.k}).png")
         pic = ImageRender(f"cache\\Saved({self.k}).png")
         pic.sharpen(self.sharpnessV)
@@ -256,7 +264,8 @@ class TKGUI:
 
         pic.scale(self.scaleV)
         self.imageStack.push(
-            [pic, [pic.getfileName(), self.tgtSize.get(), self.colour.get(), self.shadeCount.get(), self.hue.get(), self.brightness.get(),
+            [pic, [f"cache\\Saved({self.k}).png", self.tgtSize.get(), self.colour.get(), self.shadeCount.get(), self.hue.get(),
+                   self.brightness.get(),
                    self.sharpness.get(), self.scale.get()]])
 
         picTK = pic.convertTK()
@@ -265,7 +274,6 @@ class TKGUI:
         self.newIMGLabel.config(text=pic.getSize())
         self.newIMGLabel.Text = pic.getSize()
         self.newIMG = pic
-        self.k += 1
         self.undoRedoChange()
 
     def scaleS(self):
@@ -278,7 +286,8 @@ class TKGUI:
         pic.sharpen(self.sharpnessV)
         pic.scale(self.scaleV)
 
-        self.imageStack.push([pic, [pic.getfileName(), self.tgtSize.get(), self.colour.get(), self.shadeCount.get(), self.hue.get(), self.brightness.get(),
+        self.imageStack.push([pic, [pic.getfileName(), self.tgtSize.get(), self.colour.get(), self.shadeCount.get(),
+                                    self.hue.get(), self.brightness.get(),
                                     self.sharpness.get(), self.scale.get()]])
         # print(self.imageStack.list2stack)
         picTK = pic.convertTK()
@@ -298,7 +307,8 @@ class TKGUI:
         pic.sharpen(self.sharpnessV)
         pic.scale(self.scaleV)
 
-        self.imageStack.push([pic, [pic.getfileName(), self.tgtSize.get(), self.colour.get(), self.shadeCount.get(), self.hue.get(), self.brightness.get(),
+        self.imageStack.push([pic, [pic.getfileName(), self.tgtSize.get(), self.colour.get(), self.shadeCount.get(),
+                                    self.hue.get(), self.brightness.get(),
                                     self.sharpness.get(), self.scale.get()]])
         # print(self.imageStack.list2stack)
         picTK = pic.convertTK()
@@ -318,7 +328,8 @@ class TKGUI:
         pic.sharpen(self.sharpnessV)
         pic.scale(self.scaleV)
 
-        self.imageStack.push([pic, [pic.getfileName(), self.tgtSize.get(), self.colour.get(), self.shadeCount.get(), self.hue.get(), self.brightness.get(),
+        self.imageStack.push([pic, [pic.getfileName(), self.tgtSize.get(), self.colour.get(), self.shadeCount.get(),
+                                    self.hue.get(), self.brightness.get(),
                                     self.sharpness.get(), self.scale.get()]])
         # print(self.imageStack.list2stack)
         picTK = pic.convertTK()
