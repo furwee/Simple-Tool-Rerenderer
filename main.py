@@ -241,7 +241,6 @@ class TKGUI:
         self.newIMG = ImageRender(self.openFilePath)
         pic = self.newIMG
         pic.convertRGB()
-        pic.colorLvl(2)
         # pic.resizeNT(targetSize=self.tgtSizeV)
         pic.resizeLC(self.tgtSizeV)
         pic.sharpen(self.sharpnessV)
@@ -418,7 +417,7 @@ class TKGUI:
         self.shadeCount.delete(0, 'end')
         self.shadeCount.insert(0, "8")
         self.hue.delete(0, "end")
-        self.hue.insert(0,"0")
+        self.hue.insert(0, "0")
         self.brightness.delete(0, 'end')
         self.brightness.insert(0, "1")
         self.sharpness.delete(0, 'end')
