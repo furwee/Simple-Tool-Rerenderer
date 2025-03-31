@@ -173,15 +173,14 @@ class TKGUI:
         if self.openFilePath:
             self.undoRedoChange()
             pic = ImageRender(self.openFilePath)
-            pic2 = pic
-            pic.medianFilter()
-            pic.resizeNT(self.dispSize)
+            pic.resizeLC(self.dispSize)
             pic.save(f"cache\\Saved(0).png")
             self.imageStack.list2stack = (
-                [[pic, [f"cache\\Saved(0).png", self.tgtSize.get(), self.colour.get(), self.shadeCount.get(), self.hue.get(),
-                        self.brightness.get(),
-                        self.sharpness.get(), self.scale.get()]]])
-            filePath = filePath + str(pic2.getSize())
+                [[pic,
+                  [f"cache\\Saved(0).png", self.tgtSize.get(), self.colour.get(), self.shadeCount.get(), self.hue.get(),
+                   self.brightness.get(),
+                   self.sharpness.get(), self.scale.get()]]])
+            filePath = filePath + str(ImageRender(self.openFilePath).getSize())
             picTK = pic.convertTK()
             self.originalIMGDisp.config(image=picTK)
             self.originalIMGDisp.Image = picTK
@@ -214,9 +213,9 @@ class TKGUI:
         pic2 = pic
         pic2 = pic2.palette(colour=self.colourV, shadeCount=self.shadeCountV, hueV=self.hueV)
         np.sort(pic2)
-        strt = time.time()
+        strt = time()
         pic.convertPartPPM(pic2)
-        end = time.time()
+        end = time()
         print(end - strt)
         pic.save(f"cache\\Saved({self.k}).png")
         pic = ImageRender(f"cache\\Saved({self.k}).png")
@@ -225,7 +224,8 @@ class TKGUI:
 
         pic.scale(self.scaleV)
         self.imageStack.push(
-            [pic, [f"cache\\Saved({self.k}).png", self.tgtSize.get(), self.colour.get(), self.shadeCount.get(), self.hue.get(),
+            [pic, [f"cache\\Saved({self.k}).png", self.tgtSize.get(), self.colour.get(), self.shadeCount.get(),
+                   self.hue.get(),
                    self.brightness.get(),
                    self.sharpness.get(), self.scale.get()]])
 
@@ -254,9 +254,9 @@ class TKGUI:
         pic.resizeLC(self.tgtSizeV)
         pic.sharpen(self.sharpnessV)
         pic2 = ImageRender(self.palette).convertNP()
-        strt = time.time()
+        strt = time()
         pic.convertPartPPM(pic2)
-        print(time.time() - strt)
+        print(time() - strt)
         pic.save(f"cache\\Saved({self.k}).png")
         pic = ImageRender(f"cache\\Saved({self.k}).png")
         pic.sharpen(self.sharpnessV)
@@ -264,7 +264,8 @@ class TKGUI:
 
         pic.scale(self.scaleV)
         self.imageStack.push(
-            [pic, [f"cache\\Saved({self.k}).png", self.tgtSize.get(), self.colour.get(), self.shadeCount.get(), self.hue.get(),
+            [pic, [f"cache\\Saved({self.k}).png", self.tgtSize.get(), self.colour.get(), self.shadeCount.get(),
+                   self.hue.get(),
                    self.brightness.get(),
                    self.sharpness.get(), self.scale.get()]])
 

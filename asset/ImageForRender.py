@@ -1,7 +1,6 @@
 import array
 import colorsys
 from collections import Counter
-
 import numpy as np
 from PIL import Image, ImageTk, ImageFilter, ImageEnhance
 
@@ -24,15 +23,9 @@ def generatePalette(dominantC, shadeCount=2):
 
 
 def closestColor(pixel, palette):
-    # print("palette",palette)
-    # print(pixel)
     pixel = np.array(pixel, dtype=np.int32)
     palette = np.array(palette, dtype=np.int32)
     distances = np.sum((palette - pixel) ** 2, axis=1)
-    # print(distances)
-    # print(np.argmin(distances))
-    # print(palette[np.argmin(distances)])
-    # print(pixel)
     return palette[np.argmin(distances)]
 
 
@@ -186,32 +179,14 @@ class ImageRender:
         newIMGPPM = Image.open("asset\\hidden.ppm")
         self.image = newIMGPPM
 
-    def convertPart(self, paletteArr):
-        imgArr = self.convertNP()
-        newImgArr = self.changeImageColour(imgArr, paletteArr)
-        newIMG = Image.new("RGB", (self.getWidth(), self.getHeight()))
-        # print(newImgArr)
-        newImgTU = tuple(map(tuple, newImgArr))
-        k = 0
-        for i in range(0, self.getHeight()):
-            for j in range(0, self.getWidth()):
-                newIMG.putpixel((j, i), newImgTU[k])
-                k += 1
-        #        print(k, newImgTU[k])
-        self.image = newIMG
-
     def crop(self):
         self.image = self.image.crop((0, 0, self.getWidth() - 1, self.getHeight()))
 
     def changeImageColour(self, imageArr, paletteArr):
         imageArr = imageArr.astype(np.uint8)
         paletteArr = paletteArr.astype(np.uint8)
-
         for i in range(self.getArea()):
-            # newImageArrCoord = imageArr[i]
-            # print(newImageArrCoord)
             imageArr[i] = closestColor(imageArr[i], paletteArr)
-            # print(imageArr[i])
         return imageArr
 
     def domColour(self, topColour):
