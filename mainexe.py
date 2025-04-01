@@ -170,16 +170,14 @@ class TKGUI:
         if self.openFilePath:
             self.undoRedoChange()
             pic = ImageRender(self.openFilePath)
-            pic2 = pic
-            pic.medianFilter()
-            pic.resizeNT(self.dispSize)
+            pic.resizeLC(self.dispSize)
             pic.save(f"cache\\Saved(0).png")
             self.imageStack.list2stack = (
                 [[pic,
                   [f"cache\\Saved(0).png", self.tgtSize.get(), self.colour.get(), self.shadeCount.get(), self.hue.get(),
                    self.brightness.get(),
                    self.sharpness.get(), self.scale.get()]]])
-            filePath = filePath + str(pic2.getSize())
+            filePath = filePath + str(ImageRender(self.openFilePath).getSize())
             picTK = pic.convertTK()
             self.originalIMGDisp.config(image=picTK)
             self.originalIMGDisp.Image = picTK
