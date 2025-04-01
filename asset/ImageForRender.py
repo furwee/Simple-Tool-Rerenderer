@@ -167,8 +167,8 @@ class ImageRender:
             return ImageRender("asset\\testPremadePalette.png").convertNP()
 
     def convertPartPPM(self, paletteArr):
-        imgArr = self.convertNP()
-        newImgArr = self.changeImageColour(imgArr, paletteArr)
+        imgArr = self.convertNP().astype(np.uint32)
+        newImgArr = self.changeImageColour(imgArr, np.array(paletteArr).astype(np.int32))
         newIMGLi = newImgArr.flatten().tolist()
         ppmHeader = f"P6 {self.getWidth()} {self.getHeight()} 255\n"
         newIMGPPMArr = array.array('B', newIMGLi)
@@ -183,8 +183,6 @@ class ImageRender:
         self.image = self.image.crop((0, 0, self.getWidth() - 1, self.getHeight()))
 
     def changeImageColour(self, imageArr, paletteArr):
-        imageArr = imageArr.astype(np.uint8)
-        paletteArr = paletteArr.astype(np.uint8)
         for i in range(self.getArea()):
             imageArr[i] = closestColor(imageArr[i], paletteArr)
         return imageArr
