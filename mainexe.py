@@ -7,7 +7,7 @@ from asset.Stack import *
 class TKGUI:
     def __init__(self, root):
         self.root = root
-        root.title("Simple Tool Rerender v0.0.5 (Made by Furwee,collab with someone0s)")
+        root.title("Simple Tool Rerender v0.0.6 (Made by Furwee,collab with someone0s)")
         self.openFilePath = ""
         self.saveFilePath = ""
         self.imageStack = Stack(None)

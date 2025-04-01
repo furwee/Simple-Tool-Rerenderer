@@ -23,24 +23,18 @@ def generatePalette(dominantC, shadeCount=2):
     return [palette, newPal]
 
 
-@jit()
-def closestColor(pixel, palette):
-    distances = np.sum((palette - pixel) ** 2, axis=1)
-    return palette[np.argmin(distances)]
-
-
-@jit()
+@jit(nopython=True)
 def closestColorJit(pixel, palette):
-    min_distance = float('inf')
-    closest_color = None
+    minDistance = float('inf')
+    closestColor = None
     for color in palette:
         dist = 0.0
         for p, c in zip(pixel, color):
             dist += (p - c) ** 2
-        if dist < min_distance:
-            min_distance = dist
-            closest_color = color
-    return closest_color
+        if dist < minDistance:
+            minDistance = dist
+            closestColor = color
+    return closestColor
 
 
 def RGBtoHSV(rgb):  # unutbu

@@ -1,7 +1,7 @@
 import colorsys
 from array import array
 from collections import Counter
-
+from numba import jit
 import numpy as np
 from PIL import Image, ImageTk, ImageFilter, ImageEnhance
 
@@ -23,17 +23,18 @@ def generatePalette(dominantC, shadeCount=2):
     return [palette, newPal]
 
 
-def closestColor(pixel, palette):
-    # print("palette",palette)
-    # print(pixel)
-    pixel = np.array(pixel, dtype=np.int32)
-    palette = np.array(palette, dtype=np.int32)
-    distances = np.sum((palette - pixel) ** 2, axis=1)
-    # print(distances)
-    # print(np.argmin(distances))
-    # print(palette[np.argmin(distances)])
-    # print(pixel)
-    return palette[np.argmin(distances)]
+@jit(nopython=True)
+def closestColorJit(pixel, palette):
+    minDistance = float('inf')
+    closestColor = None
+    for color in palette:
+        dist = 0.0
+        for p, c in zip(pixel, color):
+            dist += (p - c) ** 2
+        if dist < minDistance:
+            minDistance = dist
+            closestColor = color
+    return closestColor
 
 
 def RGBtoHSV(rgb):  # unutbu
@@ -171,8 +172,7 @@ class ImageRender:
             return ImageRender("_internal\\asset\\testPremadePalette.png").convertNP()
 
     def convertPartPPM(self, paletteArr):
-        imgArr = self.convertNP()
-        newImgArr = self.changeImageColour(imgArr, paletteArr)
+        newImgArr = self.changeImageColour(self.convertNP().astype(np.int32), np.array(paletteArr).astype(np.int32))
         newIMGLi = newImgArr.flatten().tolist()
         ppmHeader = f"P6 {self.getWidth()} {self.getHeight()} 255\n"
         newIMGPPMArr = array('B', newIMGLi)
@@ -183,33 +183,14 @@ class ImageRender:
         newIMGPPM = Image.open("_internal\\asset\\hidden.ppm")
         self.image = newIMGPPM
 
-    def convertPart(self, paletteArr):
-        imgArr = self.convertNP()
-        newImgArr = self.changeImageColour(imgArr, paletteArr)
-        newIMG = Image.new("RGB", (self.getWidth(), self.getHeight()))
-        # print(newImgArr)
-        newImgTU = tuple(map(tuple, newImgArr))
-
-        # print(len(newImgTU))
-        k = 0
-        # print(self.getArea())
-        for i in range(0, self.getHeight()):
-            for j in range(0, self.getWidth()):
-                newIMG.putpixel((j, i), newImgTU[k])
-                k += 1
-        self.image = newIMG
-
     def crop(self):
         self.image = self.image.crop((0, 0, self.getWidth() - 1, self.getHeight()))
 
     def changeImageColour(self, imageArr, paletteArr):
-        imageArr = imageArr.astype(np.uint8)
-        paletteArr = paletteArr.astype(np.uint8)
-
         for i in range(self.getArea()):
             # newImageArrCoord = imageArr[i]
             # print(newImageArrCoord)
-            imageArr[i] = closestColor(imageArr[i], paletteArr)
+            imageArr[i] = closestColorJit(imageArr[i], paletteArr)
             # print(imageArr[i])
         return imageArr
 
