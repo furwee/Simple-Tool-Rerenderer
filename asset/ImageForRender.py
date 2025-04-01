@@ -2,6 +2,7 @@ import array
 import colorsys
 from collections import Counter
 import numpy as np
+from numba import jit
 from PIL import Image, ImageTk, ImageFilter, ImageEnhance
 
 
@@ -22,11 +23,24 @@ def generatePalette(dominantC, shadeCount=2):
     return [palette, newPal]
 
 
+@jit()
 def closestColor(pixel, palette):
-    pixel = np.array(pixel, dtype=np.int32)
-    palette = np.array(palette, dtype=np.int32)
     distances = np.sum((palette - pixel) ** 2, axis=1)
     return palette[np.argmin(distances)]
+
+
+@jit()
+def closestColorJit(pixel, palette):
+    min_distance = float('inf')
+    closest_color = None
+    for color in palette:
+        dist = 0.0
+        for p, c in zip(pixel, color):
+            dist += (p - c) ** 2
+        if dist < min_distance:
+            min_distance = dist
+            closest_color = color
+    return closest_color
 
 
 def RGBtoHSV(rgb):  # unutbu
@@ -167,8 +181,7 @@ class ImageRender:
             return ImageRender("asset\\testPremadePalette.png").convertNP()
 
     def convertPartPPM(self, paletteArr):
-        imgArr = self.convertNP().astype(np.uint32)
-        newImgArr = self.changeImageColour(imgArr, np.array(paletteArr).astype(np.int32))
+        newImgArr = self.changeImageColour(self.convertNP().astype(np.int32), np.array(paletteArr).astype(np.int32))
         newIMGLi = newImgArr.flatten().tolist()
         ppmHeader = f"P6 {self.getWidth()} {self.getHeight()} 255\n"
         newIMGPPMArr = array.array('B', newIMGLi)
@@ -184,7 +197,7 @@ class ImageRender:
 
     def changeImageColour(self, imageArr, paletteArr):
         for i in range(self.getArea()):
-            imageArr[i] = closestColor(imageArr[i], paletteArr)
+            imageArr[i] = closestColorJit(imageArr[i], paletteArr)
         return imageArr
 
     def domColour(self, topColour):
