@@ -161,6 +161,8 @@ class TKGUI:
             filePath = filedialog.askopenfilename(filetypes=[("Image files", "")])
             if filePath:
                 self.palette = filePath
+        elif ImageRender(path).getArea() > 300:
+            self.palette = "asset\\testPremadePalette.png"
         else:
             self.palette = path
 
