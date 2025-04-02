@@ -195,9 +195,6 @@ class TKGUI:
         # self.newIMG.show()
 
     def convertImageAdaptive(self):
-        if self.openedImage is True:
-            self.imageStack.last = 0
-            self.openedImage = False
         self.k += 1
         self.tgtSizeV = int(self.tgtSize.get())
         self.colourV = int(self.colour.get())
