@@ -17,6 +17,7 @@ class TKGUI:
         self.dispSize = 512
         self.palette = "asset\\testPremadePalette.png"
         self.k = 0
+        self.openedImage = None
 
         self.frameMaster = tk.Frame(self.root)
         self.frameMaster.grid(row=0, column=0)
@@ -169,7 +170,8 @@ class TKGUI:
     def openImage(self):
         self.k = 0
         self.imageStack.last = 0
-        self.originalIMGDisp.Image = None
+        if self.openFilePath != "":
+            self.openedImage = True
         filePath = filedialog.askopenfilename(filetypes=[("Image files", "")])
         self.openFilePath = filePath
         if self.openFilePath:
@@ -194,6 +196,9 @@ class TKGUI:
         # self.newIMG.show()
 
     def convertImageAdaptive(self):
+        if self.openedImage is True:
+            self.imageStack.last = 0
+            self.openedImage = False
         self.k += 1
         self.tgtSizeV = int(self.tgtSize.get())
         self.colourV = int(self.colour.get())
@@ -240,6 +245,9 @@ class TKGUI:
         self.undoRedoChange()
 
     def convertImagePremade(self):
+        if self.openedImage is True:
+            self.imageStack.last = 0
+            self.openedImage = False
         self.k += 1
         self.tgtSizeV = int(self.tgtSize.get())
         self.brightnessV = float(self.brightness.get())
