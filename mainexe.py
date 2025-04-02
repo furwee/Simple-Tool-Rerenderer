@@ -169,6 +169,7 @@ class TKGUI:
         if self.openFilePath != "":
             self.openedImage = True
         self.k = 0
+        self.imageStack.last = 0
         self.originalIMGDisp.Image = None
         filePath = filedialog.askopenfilename(filetypes=[("Image files", "")])
         self.openFilePath = filePath
