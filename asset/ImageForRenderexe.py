@@ -3,7 +3,7 @@ from array import array
 from collections import Counter
 from numba import jit
 import numpy as np
-from PIL import Image, ImageTk, ImageFilter, ImageEnhance
+from PIL import Image, ImageTk, ImageEnhance
 
 
 def generatePalette(dominantC, shadeCount=2):
@@ -130,17 +130,8 @@ class ImageRender:
         # print(self.image.height)
         return self.image.height
 
-    def getPixel(self, x, y):
-        return self.image.getpixel((x, y))
-
-    def show(self):
-        self.image.show()
-
     def save(self, path=""):
         self.image.save(path)
-
-    def convertHSV(self):
-        self.image = self.image.convert("HSV")
 
     def convertRGB(self):
         self.image = self.image.convert("RGB")
@@ -183,9 +174,6 @@ class ImageRender:
         newIMGPPM = Image.open("_internal\\asset\\hidden.ppm")
         self.image = newIMGPPM
 
-    def crop(self):
-        self.image = self.image.crop((0, 0, self.getWidth() - 1, self.getHeight()))
-
     def changeImageColour(self, imageArr, paletteArr):
         for i in range(self.getArea()):
             # newImageArrCoord = imageArr[i]
@@ -215,16 +203,9 @@ class ImageRender:
             self.image = Image.fromarray(np.repeat(np.repeat(imgArray, 20, axis=0), scale, axis=1))
             return self.image
 
-    def medianFilter(self):
-        self.image = self.image.filter(ImageFilter.MedianFilter)
-
     def sharpen(self, sharp):
         enhancer = ImageEnhance.Sharpness(self.image)
         self.image = enhancer.enhance(sharp)
-
-    def colorLvl(self, colorlvl):
-        enhancer = ImageEnhance.Color(self.image)
-        self.image = enhancer.enhance(colorlvl)
 
     def enhanceBrightness(self, bright):
         enhancer = ImageEnhance.Brightness(self.image)
