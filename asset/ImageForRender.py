@@ -1,6 +1,6 @@
 import array
 import colorsys
-from collections import Counter
+from sklearn.cluster import KMeans
 import numpy as np
 from numba import jit
 from PIL import Image, ImageTk, ImageEnhance
@@ -11,8 +11,8 @@ def generatePalette(dominantC, shadeCount=2):
     for i in range(0, len(dominantC)):
         for j in range(0, shadeCount):
             h, s, v = colorsys.rgb_to_hsv(dominantC[i][0] / 255.0, dominantC[i][1] / 255.0, dominantC[i][2] / 255.0)
-            v_shade = j * 250 / shadeCount
-            r, g, b = colorsys.hsv_to_rgb(h, s, v_shade)
+            vShade = j * 255 / (shadeCount + 1)
+            r, g, b = colorsys.hsv_to_rgb(h, s, vShade)
             palette.append((int(r), int(g), int(b)))
 
     newPal = []
@@ -182,17 +182,17 @@ class ImageRender:
             imageArr[i] = closestColorJit(imageArr[i], paletteArr)
         return imageArr
 
-    def domColour(self, topColour):
+    def domColour(self, kMeanN: int = 5):
         imgArr = self.convertNP()
-
-        # print(self.getWidth() * self.getHeight() / 3)
-        # print(int(len(imgArr)/3))
-        # print(pixels)
-        colourCounts = Counter(map(tuple, imgArr))
-        domC = [color for color, count in colourCounts.most_common(topColour) if count > 1]
-        # print(colourCounts)
-        # print(domC)
-        return domC
+        kMean = KMeans(n_clusters=kMeanN)
+        kMean.fit(imgArr)
+        labels = kMean.labels_
+        avgColor = []
+        for cluster in range(kMeanN):
+            clusterPixels = imgArr[labels == cluster]
+            averageColor = np.mean(clusterPixels, axis=0)
+            avgColor.append(averageColor)
+        return avgColor
 
     def scale(self, scale=1):
         imgArray = np.array(self.image)
