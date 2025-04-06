@@ -67,7 +67,7 @@ class TKGUI:
         self.redoB = tk.Button(self.frameStack, text="redo", command=self.redo, state=tk.DISABLED)
         self.redoB.grid(row=0, column=1, padx=5, pady=5)
 
-        self.colourL = tk.Label(self.frameIMGMID, text="Number of Colour (min 1)")
+        self.colourL = tk.Label(self.frameIMGMID, text="K-Mean (min 1)")
         self.colourL.grid(row=1, column=0, padx=5, pady=5)
         self.colour = tk.Entry(self.frameIMGMID)
         self.colour.grid(row=2, column=0, padx=5, pady=5)
@@ -91,7 +91,7 @@ class TKGUI:
         self.hueL = tk.Label(self.frameIMGMID, text="hue (0-360)*, -1 for no hue change")
         self.hueL.grid(row=7, column=0, padx=5, pady=5)
         self.hue = tk.Entry(self.frameIMGMID)
-        self.hue.insert(0, "0")
+        self.hue.insert(0, "-1")
         self.hueV = float(self.hue.get())
         self.hue.grid(row=8, column=0, padx=5, pady=5)
 

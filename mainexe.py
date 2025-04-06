@@ -79,7 +79,7 @@ class TKGUI:
         self.tgtSizeV = int(self.tgtSize.get())
         self.tgtSize.grid(row=4, column=0, padx=5, pady=5)
 
-        self.shadeCountL = tk.Label(self.frameIMGMID, text="Shade Count (min 2)")
+        self.shadeCountL = tk.Label(self.frameIMGMID, text="K-Mean (min 2)")
         self.shadeCountL.grid(row=5, column=0, padx=5, pady=5)
         self.shadeCount = tk.Entry(self.frameIMGMID)
         self.shadeCount.insert(0, "8")
@@ -89,7 +89,7 @@ class TKGUI:
         self.hueL = tk.Label(self.frameIMGMID, text="hue (0-360)*, -1 for no hue change")
         self.hueL.grid(row=7, column=0, padx=5, pady=5)
         self.hue = tk.Entry(self.frameIMGMID)
-        self.hue.insert(0, "0")
+        self.hue.insert(0, "-1")
         self.hueV = int(self.hue.get())
         self.hue.grid(row=8, column=0, padx=5, pady=5)
 
