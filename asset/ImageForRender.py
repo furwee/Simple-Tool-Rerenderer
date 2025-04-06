@@ -37,6 +37,13 @@ def closestColorJit(pixel, palette):
     return closestColor
 
 
+def warmUP():
+    imageArr = ImageRender("asset\\test.jpg").convertNP().astype(np.int32)
+    paletteArr = ImageRender("asset\\testPremadePalette.png").convertNP().astype(np.int32)
+    for i in imageArr:
+        closestColorJit(i, paletteArr)
+
+
 def RGBtoHSV(rgb):  # unutbu
     rgb = rgb.astype('float')
     hsv = np.zeros_like(rgb)
@@ -166,7 +173,7 @@ class ImageRender:
             return ImageRender("asset\\testPremadePalette.png").convertNP()
 
     def convertPartPPM(self, paletteArr):
-        newImgArr = self.changeImageColour(self.convertNP().astype(np.int32), np.array(paletteArr).astype(np.int32))
+        newImgArr = self.changeImageColour(self.convertNP(), np.array(paletteArr).astype(np.int32))
         newIMGLi = newImgArr.flatten().tolist()
         ppmHeader = f"P6 {self.getWidth()} {self.getHeight()} 255\n"
         newIMGPPMArr = array.array('B', newIMGLi)

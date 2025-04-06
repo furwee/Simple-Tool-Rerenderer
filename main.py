@@ -467,6 +467,7 @@ def main():
     except FileExistsError:
         pass
     finally:
+        warmUP()
         rootTK = tk.Tk()
         rootTK.minsize(600, 600)
         # rootTK.resizable(False, False)

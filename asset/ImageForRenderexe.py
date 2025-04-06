@@ -37,6 +37,13 @@ def closestColorJit(pixel, palette):
     return closestColor
 
 
+def warmUP():
+    imageArr = ImageRender("_internal\\asset\\test.jpg").convertNP().astype(np.int32)
+    paletteArr = ImageRender("_internal\\asset\\testPremadePalette.png").convertNP().astype(np.int32)
+    for i in imageArr:
+        closestColorJit(i, paletteArr)
+
+
 def RGBtoHSV(rgb):  # unutbu
     rgb = rgb.astype('float')
     hsv = np.zeros_like(rgb)
