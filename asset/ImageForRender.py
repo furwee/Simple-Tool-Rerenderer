@@ -1,26 +1,27 @@
 import array
-import colorsys
 from sklearn.cluster import KMeans
 import numpy as np
 from numba import jit
 from PIL import Image, ImageTk, ImageEnhance
 
 
+@jit(nopython=True)
 def generatePalette(dominantC, shadeCount=2):
     palette = []
-    for i in range(0, len(dominantC)):
-        for j in range(0, shadeCount):
-            h, s, v = colorsys.rgb_to_hsv(dominantC[i][0] / 255.0, dominantC[i][1] / 255.0, dominantC[i][2] / 255.0)
-            vShade = j * 255 / (shadeCount + 1)
-            r, g, b = colorsys.hsv_to_rgb(h, s, vShade)
-            palette.append((int(r), int(g), int(b)))
+    for colour in dominantC:
+        for j in range(0, 255, 255//shadeCount):
+            vShade = j / 255
+            r = int(colour[0] * vShade)
+            g = int(colour[1] * vShade)
+            b = int(colour[2] * vShade)
+            palette.append((r, g, b))
 
     newPal = []
     for item in palette:
         if item not in newPal:
             newPal.append(item)
-    # print(np.array(newPal))
-    return [palette, newPal]
+    # print(newPal)
+    return newPal
 
 
 @jit(nopython=True)
@@ -157,7 +158,7 @@ class ImageRender:
 
     def palette(self, colour, shadeCount, hueV):
         try:
-            palette = generatePalette(self.domColour(colour), shadeCount)[1]
+            palette = generatePalette(self.domColour(colour), shadeCount)
             paletteAsArray = np.array(palette)
             # print(paletteAsArray)
             paletteAsArray = hue(paletteAsArray, hueV)
@@ -199,6 +200,8 @@ class ImageRender:
             clusterPixels = imgArr[labels == cluster]
             averageColor = np.mean(clusterPixels, axis=0)
             avgColor.append(averageColor)
+        avgColor = np.array(avgColor)
+        # print(avgColor)
         return avgColor
 
     def scale(self, scale=1):
