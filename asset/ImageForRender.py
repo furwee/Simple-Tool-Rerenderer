@@ -8,7 +8,6 @@ from PIL import Image, ImageTk, ImageEnhance
 
 def generatePalette(dominantC, shadeCount=2):
     palette = []
-    hANDs = []
     for i in range(0, len(dominantC)):
         for j in range(0, shadeCount):
             h, s, v = colorsys.rgb_to_hsv(dominantC[i][0] / 255.0, dominantC[i][1] / 255.0, dominantC[i][2] / 255.0)
