@@ -9,7 +9,6 @@ from collections import Counter
 def generatePalette(dominantC, shadeCount: int = 2):
     palette = []
     for colour in dominantC:
-        print(colour)
         for j in range(0, 255, 255//shadeCount):
             vShade = j / 255
             r = int(colour[0] * vShade)
@@ -189,7 +188,6 @@ class ImageRender:
         colourCounts = Counter(map(tuple, imgArr))
         domC = [color for color, count in colourCounts.most_common(colour) if count > 1]
         return domC
-
 
     def scale(self, scale=1):
         imgArray = np.array(self.image)
