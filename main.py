@@ -217,11 +217,10 @@ class TKGUI:
         # pic.resizeNT(targetSize=self.tgtSizeV)
         pic.resizeLC(self.tgtSizeV)
         pic.sharpen(self.sharpnessV)
-        pic2 = pic
-        pic2 = pic2.palette(colour=self.colourV, shadeCount=self.shadeCountV, hueV=self.hueV)
-        np.sort(pic2)
         strt = time()
-        pic.convertPartPPM(pic2)
+        pic2 = pic
+        palette = pic2.palette(self.colourV, self.shadeCountV, self.hueV)
+        pic.convertPartPPM(palette)
         end = time()
         print(end - strt)
         pic.save(f"cache\\Saved({self.k}).png")

@@ -2,10 +2,9 @@ from array import array
 import numpy as np
 from numba import jit
 from PIL import Image, ImageTk, ImageEnhance
-from collections import Counter
+from sklearn.cluster import MiniBatchKMeans
 
 
-@jit(nopython=True)
 def generatePalette(dominantC, shadeCount: int = 2):
     palette = []
     for colour in dominantC:
@@ -15,7 +14,6 @@ def generatePalette(dominantC, shadeCount: int = 2):
             g = int(colour[1] * vShade)
             b = int(colour[2] * vShade)
             palette.append((r, g, b))
-
     newPal = []
     for item in palette:
         if item not in newPal:
@@ -156,9 +154,9 @@ class ImageRender:
         self.convertRGB()
         return np.array(self.image).reshape(-1, 3)
 
-    def palette(self, colour, shadeCount, hueV):
+    def palette(self, kMean, shadeCount, hueV):
         try:
-            palette = generatePalette(self.domColour(colour), shadeCount)
+            palette = generatePalette(self.adaptiveConvertToPalPreset(kMean), shadeCount)
             paletteAsArray = np.array(palette)
             paletteAsArray = hue(paletteAsArray, hueV)
             return paletteAsArray
@@ -170,24 +168,30 @@ class ImageRender:
         newImgArr = self.changeImageColour(self.convertNP(), np.array(paletteArr).astype(np.int32))
         newIMGLi = newImgArr.flatten().tolist()
         ppmHeader = f"P6 {self.getWidth()} {self.getHeight()} 255\n"
-        newIMGPPMArr = array('B', newIMGLi)
-        ppm = open('asset\\hidden.ppm', 'wb')
-        ppm.write(bytearray(ppmHeader, 'ascii'))
-        newIMGPPMArr.tofile(ppm)
-        ppm.close()
-        newIMGPPM = Image.open("asset\\hidden.ppm")
-        self.image = newIMGPPM
+        self.LiconvertToPPMToImage(newIMGLi, ppmHeader)
+
+    def adaptiveConvertToPalPreset(self, kMean):
+        imgArr = self.convertNP()
+        kMeans = MiniBatchKMeans(kMean, compute_labels=False)
+        kMeans.fit(imgArr.reshape(-1, 1))
+        labels = kMeans.predict(imgArr.reshape(-1, 1))
+        qX = kMeans.cluster_centers_[labels]
+        qImg = np.uint8(qX.reshape(-1, 3)).tolist()
+        return qImg
 
     def changeImageColour(self, imageArr, paletteArr):
         for i in range(self.getArea()):
             imageArr[i] = closestColorJit(imageArr[i], paletteArr)
         return imageArr
 
-    def domColour(self, colour: int = 5):
-        imgArr = self.convertNP()
-        colourCounts = Counter(map(tuple, imgArr))
-        domC = [color for color, count in colourCounts.most_common(colour) if count > 1]
-        return domC
+    def LiconvertToPPMToImage(self, Li, header):
+        newIMGPPMArr = array('B', Li)
+        ppm = open('asset\\hidden.ppm', 'wb')
+        ppm.write(bytearray(header, 'ascii'))
+        newIMGPPMArr.tofile(ppm)
+        ppm.close()
+        newIMGPPM = Image.open("asset\\hidden.ppm")
+        self.image = newIMGPPM
 
     def scale(self, scale=1):
         imgArray = np.array(self.image)
