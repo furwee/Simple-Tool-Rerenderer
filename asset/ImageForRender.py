@@ -1,14 +1,15 @@
-import array
-from sklearn.cluster import KMeans
+from array import array
 import numpy as np
 from numba import jit
 from PIL import Image, ImageTk, ImageEnhance
+from collections import Counter
 
 
 @jit(nopython=True)
-def generatePalette(dominantC, shadeCount=2):
+def generatePalette(dominantC, shadeCount: int = 2):
     palette = []
     for colour in dominantC:
+        print(colour)
         for j in range(0, 255, 255//shadeCount):
             vShade = j / 255
             r = int(colour[0] * vShade)
@@ -160,14 +161,7 @@ class ImageRender:
         try:
             palette = generatePalette(self.domColour(colour), shadeCount)
             paletteAsArray = np.array(palette)
-            # print(paletteAsArray)
             paletteAsArray = hue(paletteAsArray, hueV)
-            paletteIMG = Image.new(mode='P', size=(len(paletteAsArray), 1))
-            for i in range(0, len(paletteAsArray)):
-                # print(palette[i])
-                paletteIMG.putpixel((i, 0), palette[i])
-
-            paletteIMG.save("Asset\\testPalette.png")
             return paletteAsArray
         except ValueError:
             print("palette issue")
@@ -177,7 +171,7 @@ class ImageRender:
         newImgArr = self.changeImageColour(self.convertNP(), np.array(paletteArr).astype(np.int32))
         newIMGLi = newImgArr.flatten().tolist()
         ppmHeader = f"P6 {self.getWidth()} {self.getHeight()} 255\n"
-        newIMGPPMArr = array.array('B', newIMGLi)
+        newIMGPPMArr = array('B', newIMGLi)
         ppm = open('asset\\hidden.ppm', 'wb')
         ppm.write(bytearray(ppmHeader, 'ascii'))
         newIMGPPMArr.tofile(ppm)
@@ -190,19 +184,12 @@ class ImageRender:
             imageArr[i] = closestColorJit(imageArr[i], paletteArr)
         return imageArr
 
-    def domColour(self, kMeanN: int = 5):
+    def domColour(self, colour: int = 5):
         imgArr = self.convertNP()
-        kMean = KMeans(n_clusters=kMeanN)
-        kMean.fit(imgArr)
-        labels = kMean.labels_
-        avgColor = []
-        for cluster in range(kMeanN):
-            clusterPixels = imgArr[labels == cluster]
-            averageColor = np.mean(clusterPixels, axis=0)
-            avgColor.append(averageColor)
-        avgColor = np.array(avgColor)
-        # print(avgColor)
-        return avgColor
+        colourCounts = Counter(map(tuple, imgArr))
+        domC = [color for color, count in colourCounts.most_common(colour) if count > 1]
+        return domC
+
 
     def scale(self, scale=1):
         imgArray = np.array(self.image)

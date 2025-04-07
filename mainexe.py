@@ -65,7 +65,7 @@ class TKGUI:
         self.redoB = tk.Button(self.frameStack, text="redo", command=self.redo, state=tk.DISABLED)
         self.redoB.grid(row=0, column=1, padx=5, pady=5)
 
-        self.colourL = tk.Label(self.frameIMGMID, text="Number of Colour (min 1)")
+        self.colourL = tk.Label(self.frameIMGMID, text="Number of colours (min 1)")
         self.colourL.grid(row=1, column=0, padx=5, pady=5)
         self.colour = tk.Entry(self.frameIMGMID)
         self.colour.grid(row=2, column=0, padx=5, pady=5)
@@ -79,7 +79,7 @@ class TKGUI:
         self.tgtSizeV = int(self.tgtSize.get())
         self.tgtSize.grid(row=4, column=0, padx=5, pady=5)
 
-        self.shadeCountL = tk.Label(self.frameIMGMID, text="K-Mean (min 2)")
+        self.shadeCountL = tk.Label(self.frameIMGMID, text="Shade Count (min 2)")
         self.shadeCountL.grid(row=5, column=0, padx=5, pady=5)
         self.shadeCount = tk.Entry(self.frameIMGMID)
         self.shadeCount.insert(0, "8")
@@ -449,7 +449,6 @@ def main():
     except FileExistsError:
         pass
     finally:
-        warmUP()
         rootTK = tk.Tk()
         rootTK.minsize(600, 600)
         rootTK.iconbitmap("_internal\\asset\\STR_Logo_PA.ico")

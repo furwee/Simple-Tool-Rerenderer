@@ -67,7 +67,7 @@ class TKGUI:
         self.redoB = tk.Button(self.frameStack, text="redo", command=self.redo, state=tk.DISABLED)
         self.redoB.grid(row=0, column=1, padx=5, pady=5)
 
-        self.colourL = tk.Label(self.frameIMGMID, text="K-Mean (min 1)")
+        self.colourL = tk.Label(self.frameIMGMID, text="Number of colours (min 1)")
         self.colourL.grid(row=1, column=0, padx=5, pady=5)
         self.colour = tk.Entry(self.frameIMGMID)
         self.colour.grid(row=2, column=0, padx=5, pady=5)

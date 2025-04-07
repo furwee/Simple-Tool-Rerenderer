@@ -1,11 +1,9 @@
 from array import array
-from sklearn.cluster import KMeans
 from numba import jit
 import numpy as np
 from PIL import Image, ImageTk, ImageEnhance
+from collections import Counter
 
-
-@jit(nopython=True)
 def generatePalette(dominantC, shadeCount=2):
     palette = []
     for colour in dominantC:
@@ -36,13 +34,6 @@ def closestColorJit(pixel, palette):
             minDistance = dist
             closestColor = color
     return closestColor
-
-
-def warmUP():
-    imageArr = ImageRender("_internal\\asset\\test.jpg").convertNP().astype(np.int32)
-    paletteArr = ImageRender("_internal\\asset\\testPremadePalette.png").convertNP().astype(np.int32)
-    for i in imageArr:
-        closestColorJit(i, paletteArr)
 
 
 def RGBtoHSV(rgb):  # unutbu
@@ -85,10 +76,13 @@ def HSVtoRGB(hsv):  # unutbu
 
 
 def hue(arr, hueV):
-    hsv = RGBtoHSV(arr)
-    hsv[..., 0] = hueV
-    rgb = HSVtoRGB(hsv)
-    return rgb
+    if hueV == -1:
+        return arr
+    else:
+        hsv = RGBtoHSV(arr)
+        hsv[..., 0] = hueV
+        rgb = HSVtoRGB(hsv)
+        return rgb
 
 
 class ImageRender:
@@ -152,26 +146,18 @@ class ImageRender:
         self.convertRGB()
         return np.array(self.image).reshape(-1, 3)
 
-    def palette(self, colour, shadeCount, hueV):
+    def palettePPM(self, colour, shadeCount, hueV):
         try:
-            palette = generatePalette(self.domColour(colour), shadeCount)[1]
+            palette = generatePalette(self.domColour(colour), shadeCount)
             paletteAsArray = np.array(palette)
             paletteAsArray = hue(paletteAsArray, hueV)
-            # print(paletteAsArray)
-
-            paletteIMG = Image.new(mode='P', size=(len(paletteAsArray), 1))
-            for i in range(0, len(paletteAsArray)):
-                # print(palette[i])
-                paletteIMG.putpixel((i, 0), palette[i])
-
-            paletteIMG.save("_internal\\Asset\\testPalette.png")
             return paletteAsArray
         except ValueError:
             print("palette issue")
             return ImageRender("_internal\\asset\\testPremadePalette.png").convertNP()
 
     def convertPartPPM(self, paletteArr):
-        newImgArr = self.changeImageColour(self.convertNP().astype(np.int32), np.array(paletteArr).astype(np.int32))
+        newImgArr = self.changeImageColour(self.convertNP(), np.array(paletteArr).astype(np.int32))
         newIMGLi = newImgArr.flatten().tolist()
         ppmHeader = f"P6 {self.getWidth()} {self.getHeight()} 255\n"
         newIMGPPMArr = array('B', newIMGLi)
@@ -184,23 +170,14 @@ class ImageRender:
 
     def changeImageColour(self, imageArr, paletteArr):
         for i in range(self.getArea()):
-            # newImageArrCoord = imageArr[i]
-            # print(newImageArrCoord)
             imageArr[i] = closestColorJit(imageArr[i], paletteArr)
-            # print(imageArr[i])
         return imageArr
 
-    def domColour(self, kMeanN: int = 5):
+    def domColour(self, colour: int = 5):
         imgArr = self.convertNP()
-        kMean = KMeans(n_clusters=kMeanN)
-        kMean.fit(imgArr)
-        labels = kMean.labels_
-        avgColor = []
-        for cluster in range(kMeanN):
-            clusterPixels = imgArr[labels == cluster]
-            averageColor = np.mean(clusterPixels, axis=0)
-            avgColor.append(averageColor)
-        return avgColor
+        colourCounts = Counter(map(tuple, imgArr))
+        domC = [color for color, count in colourCounts.most_common(colour) if count > 1]
+        return domC
 
     def scale(self, scale=1):
         imgArray = np.array(self.image)
