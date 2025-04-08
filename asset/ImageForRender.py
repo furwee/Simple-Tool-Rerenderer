@@ -1,6 +1,7 @@
 from array import array
 import numpy as np
 from numba import jit
+from colorsys import *
 from PIL import Image, ImageTk, ImageEnhance
 from sklearn.cluster import MiniBatchKMeans
 
@@ -8,12 +9,15 @@ from sklearn.cluster import MiniBatchKMeans
 def generatePalette(dominantC, shadeCount: int = 2):
     palette = []
     for colour in dominantC:
-        for j in range(0, 255, 255//shadeCount):
-            vShade = j / 255
-            r = int(colour[0] * vShade)
-            g = int(colour[1] * vShade)
-            b = int(colour[2] * vShade)
-            palette.append((r, g, b))
+        if shadeCount == 1:
+            return dominantC
+        else:
+            for j in range(0, 255, 255//shadeCount):
+                vShade = j / 255
+                r = int(colour[0] * vShade)
+                g = int(colour[1] * vShade)
+                b = int(colour[2] * vShade)
+                palette.append((r, g, b))
     newPal = []
     for item in palette:
         if item not in newPal:
@@ -43,54 +47,19 @@ def warmUP():
         closestColorJit(i, paletteArr)
 
 
-def RGBtoHSV(rgb):  # unutbu
-    rgb = rgb.astype('float')
-    hsv = np.zeros_like(rgb)
-    hsv[..., 3:] = rgb[..., 3:]
-    r, g, b = rgb[..., 0], rgb[..., 1], rgb[..., 2]
-    maxc = np.max(rgb[..., :3], axis=-1)
-    minc = np.min(rgb[..., :3], axis=-1)
-    hsv[..., 2] = maxc
-    mask = maxc != minc
-    hsv[mask, 1] = (maxc - minc)[mask] / maxc[mask]
-    rc = np.zeros_like(r)
-    gc = np.zeros_like(g)
-    bc = np.zeros_like(b)
-    rc[mask] = (maxc - r)[mask] / (maxc - minc)[mask]
-    gc[mask] = (maxc - g)[mask] / (maxc - minc)[mask]
-    bc[mask] = (maxc - b)[mask] / (maxc - minc)[mask]
-    hsv[..., 0] = np.select(
-        [r == maxc, g == maxc], [bc - gc, 2.0 + rc - bc], default=4.0 + gc - rc)
-    hsv[..., 0] = (hsv[..., 0] / 6.0) % 1.0
-    return hsv
-
-
-def HSVtoRGB(hsv):  # unutbu
-    rgb = np.empty_like(hsv)
-    rgb[..., 3:] = hsv[..., 3:]
-    h, s, v = hsv[..., 0], hsv[..., 1], hsv[..., 2]
-    i = (h * 6.0).astype('uint8')
-    f = (h * 6.0) - i
-    p = v * (1.0 - s)
-    q = v * (1.0 - s * f)
-    t = v * (1.0 - s * (1.0 - f))
-    i = i % 6
-    conditions = [s == 0.0, i == 1, i == 2, i == 3, i == 4, i == 5]
-    rgb[..., 0] = np.select(conditions, [v, q, p, p, t, v], default=v)
-    rgb[..., 1] = np.select(conditions, [v, v, v, q, p, p], default=t)
-    rgb[..., 2] = np.select(conditions, [v, p, t, v, v, q], default=p)
-    return rgb.astype('uint8')
-
-
 def hue(arr, hueV=-1):
     if hueV == -1:
         return arr
     else:
-        hueV /= 360
-        hsv = RGBtoHSV(arr)
-        hsv[..., 0] = hueV
-        rgb = HSVtoRGB(hsv)
-        return rgb
+        arr2 = arr.copy()
+        for i in range(arr2.shape[0]):
+            r, g, b = arr2[i] / 255
+            h, s, v = rgb_to_hsv(r, g, b)
+            h = hueV / 360
+            s = min(max(s * 1.5, 0.5), 1.0)
+            r, g, b = hsv_to_rgb(h, s, v)
+            arr2[i] = (r * 255, g * 255, b * 255)
+        return arr2
 
 
 class ImageRender:

@@ -214,8 +214,8 @@ class TKGUI:
         pic.resizeLC(self.tgtSizeV)
         pic.sharpen(self.sharpnessV)
         pic2 = pic
-        pic2 = pic2.palette(colour=self.colourV, shadeCount=self.shadeCountV, hueV=self.hueV)
-        pic.convertPartPPM(pic2)
+        palette = pic2.palette(self.colourV, self.shadeCountV, self.hueV)
+        pic.convertPartPPM(palette)
         pic.save(f"cache\\Saved({self.k}).png")
         pic = ImageRender(f"cache\\Saved({self.k}).png")
         pic.sharpen(self.sharpnessV)
