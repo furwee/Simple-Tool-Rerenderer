@@ -6,6 +6,14 @@ from PIL import Image, ImageTk, ImageEnhance
 from sklearn.cluster import MiniBatchKMeans
 
 
+def LiconvertToPPMToImage(Li, header, fileName):
+    newIMGPPMArr = array('B', Li)
+    ppm = open(f'asset\\{fileName}.ppm', 'wb')
+    ppm.write(bytearray(header, 'ascii'))
+    newIMGPPMArr.tofile(ppm)
+    ppm.close()
+
+
 def generatePalette(dominantC, shadeCount: int = 2):
     palette = []
     for colour in dominantC:
@@ -17,13 +25,10 @@ def generatePalette(dominantC, shadeCount: int = 2):
                 r = int(colour[0] * vShade)
                 g = int(colour[1] * vShade)
                 b = int(colour[2] * vShade)
-                palette.append((r, g, b))
-    newPal = []
-    for item in palette:
-        if item not in newPal:
-            newPal.append(item)
-    # print(newPal)
-    return newPal
+                rgb = (int(r), int(g), int(b))
+                if rgb not in palette:
+                    palette.append((r, g, b))
+    return np.array(palette).reshape(-1, 3).astype(np.int32)
 
 
 @jit(nopython=True)
@@ -56,10 +61,11 @@ def hue(arr, hueV=-1):
             r, g, b = arr2[i] / 255
             h, s, v = rgb_to_hsv(r, g, b)
             h = hueV / 360
-            s = min(max(s * 1.5, 0.5), 1.0)
+            if s > 0.06:
+                s = min(max(s * 1.5, 0.5), 1.0)
             r, g, b = hsv_to_rgb(h, s, v)
             arr2[i] = (r * 255, g * 255, b * 255)
-        return arr2
+    return arr2
 
 
 class ImageRender:
@@ -126,9 +132,8 @@ class ImageRender:
     def palette(self, kMean, shadeCount, hueV):
         try:
             palette = generatePalette(self.adaptiveConvertToPalPreset(kMean), shadeCount)
-            paletteAsArray = np.array(palette)
-            paletteAsArray = hue(paletteAsArray, hueV)
-            return paletteAsArray
+            huePalette = hue(palette, hueV)
+            return huePalette
         except ValueError:
             print("palette issue")
             return ImageRender("asset\\testPremadePalette.png").convertNP()
@@ -137,11 +142,12 @@ class ImageRender:
         newImgArr = self.changeImageColour(self.convertNP(), np.array(paletteArr).astype(np.int32))
         newIMGLi = newImgArr.flatten().tolist()
         ppmHeader = f"P6 {self.getWidth()} {self.getHeight()} 255\n"
-        self.LiconvertToPPMToImage(newIMGLi, ppmHeader)
+        LiconvertToPPMToImage(newIMGLi, ppmHeader, "hidden")
+        self.selfImageUpdate()
 
     def adaptiveConvertToPalPreset(self, kMean):
-        imgArr = self.convertNP()
-        kMeans = MiniBatchKMeans(kMean, compute_labels=False)
+        imgArr = self.convertNP().astype(np.int32)
+        kMeans = MiniBatchKMeans(n_clusters=kMean, compute_labels=False, max_no_improvement=1)
         kMeans.fit(imgArr.reshape(-1, 1))
         labels = kMeans.predict(imgArr.reshape(-1, 1))
         qX = kMeans.cluster_centers_[labels]
@@ -153,12 +159,7 @@ class ImageRender:
             imageArr[i] = closestColorJit(imageArr[i], paletteArr)
         return imageArr
 
-    def LiconvertToPPMToImage(self, Li, header):
-        newIMGPPMArr = array('B', Li)
-        ppm = open('asset\\hidden.ppm', 'wb')
-        ppm.write(bytearray(header, 'ascii'))
-        newIMGPPMArr.tofile(ppm)
-        ppm.close()
+    def selfImageUpdate(self):
         newIMGPPM = Image.open("asset\\hidden.ppm")
         self.image = newIMGPPM
 
