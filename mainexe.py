@@ -1,3 +1,6 @@
+# depreciated
+
+
 import tkinter as tk
 from tkinter import filedialog
 from time import *

@@ -1,3 +1,6 @@
+# depreciated
+
+
 from array import array
 import numpy as np
 from numba import jit
