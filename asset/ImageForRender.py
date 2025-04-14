@@ -139,6 +139,7 @@ class ImageRender:
             return ImageRender("asset\\testPremadePalette.png").convertNP()
 
     def convertPartPPM(self, paletteArr):
+        # print(paletteArr)
         newImgArr = self.changeImageColour(self.convertNP(), np.array(paletteArr).astype(np.int32))
         newIMGLi = newImgArr.flatten().tolist()
         ppmHeader = f"P6 {self.getWidth()} {self.getHeight()} 255\n"

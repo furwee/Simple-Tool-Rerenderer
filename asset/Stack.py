@@ -22,7 +22,7 @@ class Stack:
         return self.list2stack[self.last]
 
     def undo(self):
-        if self.last > 0:
+        if self.last > 1:
             self.last -= 1
             self.last = self.last
         else:
