@@ -1,19 +1,30 @@
 # Simple Tool Rerenderer
 
-## Current release: v0.0.61
+## Current release: v0.0.62
 
 This program is made to simulate pixel art without simply resizing/pixelating images.  
 Therefore a palette is used to convert each pixels in the image to the closest colour on the palette.  
 This program is made collaboratively by furwee and someone0s.
 
+## How to use this program:
+- clone the repository to the specified locations in your computer
+- use cmd to cd to the folder location  
+```cd [folder location]```
+- use pip to do the following command:  
+```pip install -r requirements.txt``` <- installs modules  
+```pip list``` <- makes sure the modules are imported correctly
+- once you made sure the modules are installed, do the following:  
+```python main.py```  
+and there you go :)
+
 ## What image file formats does it support?
 
-**.png, .jpg, .jpeg, .webp**
-## Why is V0.0.61 so large in file size?
+**.png, .jpg, .jpeg, .webp, .ico**
+
+## Why is V0.0.62 so large in file size?
 
 Unfortunately the usage of numba (used to speed up pixel processing) requires llvmlite and it occupies almost half of the program's size...  
 I will try to make it as lightweight as possible and maintaining its speed in future updates qwq
-
 
 ## To import palette, you may:  
 
