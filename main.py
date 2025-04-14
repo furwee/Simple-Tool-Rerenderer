@@ -15,7 +15,7 @@ class TKGUI:
         self.imageStack = Stack(None)
         self.newIMG = ImageRender("asset\\test.jpg")
         self.dispSize = 512
-        self.palette = "asset\\testPremadePalette.png"
+        self.palette = ImageRender("asset\\testPremadePalette.png").convertNP()
         self.k = 0
         self.openedImage = None
 
@@ -160,12 +160,12 @@ class TKGUI:
     def importPalette(self, path=""):
         if path == "":
             filePath = filedialog.askopenfilename(filetypes=[("Image files", "")])
-            if filePath:
-                self.palette = filePath
-        elif ImageRender(path).getArea() > 300:
-            self.palette = "asset\\testPremadePalette.png"
-        else:
-            self.palette = path
+        if filePath:
+            test = ImageRender(filePath)
+            if test.getArea() < 300:
+                self.palette = test.convertNP()
+            else:
+                self.palette = ImageRender("asset\\testPremadePalette.png").convertNP()
 
     def openImage(self):
         self.k = 0
@@ -262,9 +262,8 @@ class TKGUI:
         # pic.resizeNT(targetSize=self.tgtSizeV)
         pic.resizeLC(self.tgtSizeV)
         pic.sharpen(self.sharpnessV)
-        pic2 = ImageRender(self.palette).convertNP()
         strt = time()
-        pic.convertPartPPM(pic2)
+        pic.convertPartPPM(self.palette)
         print(time() - strt)
         pic.save(f"cache\\Saved({self.k}).png")
         pic = ImageRender(f"cache\\Saved({self.k}).png")
@@ -445,11 +444,11 @@ class TKGUI:
         self.sharpness.insert(0, "1")
         self.scale.delete(0, 'end')
         self.scale.insert(0, "4")
-        self.palette = "asset\\testPremadePalette.png"
+        self.palette = ImageRender("asset\\testPremadePalette.png").convertNP()
 
     def undoRedoChange(self):
         # print("U", self.imageStack.last, self.imageStack.getSize())
-        if self.imageStack.getSize() == 0 or self.imageStack.last == 0:
+        if self.imageStack.getSize() == 0 or self.imageStack.last == 1:
             self.undoB.config(state=tk.DISABLED)
         else:
             self.undoB.config(state=tk.NORMAL)

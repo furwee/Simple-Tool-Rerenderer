@@ -1,8 +1,9 @@
 import tkinter as tk
 from tkinter import filedialog
+from time import *
 from asset.ImageForRenderexe import *
 from asset.Stack import *
-
+import os
 
 class TKGUI:
     def __init__(self, root):
@@ -13,7 +14,7 @@ class TKGUI:
         self.imageStack = Stack(None)
         self.newIMG = ImageRender("_internal\\asset\\test.jpg")
         self.dispSize = 512
-        self.palette = "_internal\\asset\\testPremadePalette.png"
+        self.palette = ImageRender("_internal\\asset\\testPremadePalette.png").convertNP()
         self.k = 0
         self.openedImage = None
 
@@ -65,7 +66,7 @@ class TKGUI:
         self.redoB = tk.Button(self.frameStack, text="redo", command=self.redo, state=tk.DISABLED)
         self.redoB.grid(row=0, column=1, padx=5, pady=5)
 
-        self.colourL = tk.Label(self.frameIMGMID, text="Number of colours (min 1)")
+        self.colourL = tk.Label(self.frameIMGMID, text="kMean (min 1)")
         self.colourL.grid(row=1, column=0, padx=5, pady=5)
         self.colour = tk.Entry(self.frameIMGMID)
         self.colour.grid(row=2, column=0, padx=5, pady=5)
@@ -90,7 +91,7 @@ class TKGUI:
         self.hueL.grid(row=7, column=0, padx=5, pady=5)
         self.hue = tk.Entry(self.frameIMGMID)
         self.hue.insert(0, "-1")
-        self.hueV = int(self.hue.get())
+        self.hueV = float(self.hue.get())
         self.hue.grid(row=8, column=0, padx=5, pady=5)
 
         self.brightnessL = tk.Label(self.frameIMGMID, text="brightness (float)")
@@ -158,19 +159,18 @@ class TKGUI:
     def importPalette(self, path=""):
         if path == "":
             filePath = filedialog.askopenfilename(filetypes=[("Image files", "")])
-            if filePath:
-                self.palette = filePath
-        elif ImageRender(path).getArea() > 300:
-            self.palette = "_internal\\asset\\testPremadePalette.png"
-        else:
-            self.palette = path
+        if filePath:
+            test = ImageRender(filePath)
+            if test.getArea() < 300:
+                self.palette = test.convertNP()
+            else:
+                self.palette = ImageRender("_internal\\asset\\testPremadePalette.png")
 
     def openImage(self):
-        if self.openFilePath != "":
-            self.openedImage = True
         self.k = 0
         self.imageStack.last = 0
-        self.originalIMGDisp.Image = None
+        if self.openFilePath != "":
+            self.openedImage = True
         filePath = filedialog.askopenfilename(filetypes=[("Image files", "")])
         self.openFilePath = filePath
         if self.openFilePath:
@@ -190,20 +190,23 @@ class TKGUI:
             self.originalIMGLabel.config(text=filePath)
 
     def saveImage(self):
-        filePath = filedialog.asksaveasfilename(filetypes=[("Image files", ".png")])
+        filePath = filedialog.asksaveasfilename(filetypes=[("Image files", "*.png;*.jpg;*.jpeg;*.bmp;*.gif")])
         self.imageStack.getCurrent()[0].save(filePath)
         # self.newIMG.show()
 
     def convertImageAdaptive(self):
+        if self.openedImage is True:
+            self.imageStack.last = 0
+            self.openedImage = False
         self.k += 1
         self.tgtSizeV = int(self.tgtSize.get())
         self.colourV = int(self.colour.get())
         self.shadeCountV = int(self.shadeCount.get())
-        self.hueV = int(self.hue.get())
         self.brightnessV = float(self.brightness.get())
         self.sharpnessV = float(self.sharpness.get())
         self.scaleV = int(self.scale.get())
-        img = ImageRender("_internal\\asset\\test.jpg")
+        self.hueV = float(self.hue.get())
+        img = ImageRender("asset\\test.jpg")
         self.newIMGDisp.config(image=img.convertTK())
         self.newIMGDisp.Image = None
         print(self.imageStack.list2stack[0][1][0])
@@ -213,9 +216,12 @@ class TKGUI:
         # pic.resizeNT(targetSize=self.tgtSizeV)
         pic.resizeLC(self.tgtSizeV)
         pic.sharpen(self.sharpnessV)
+        strt = time()
         pic2 = pic
         palette = pic2.palette(self.colourV, self.shadeCountV, self.hueV)
         pic.convertPartPPM(palette)
+        end = time()
+        print(end - strt)
         pic.save(f"cache\\Saved({self.k}).png")
         pic = ImageRender(f"cache\\Saved({self.k}).png")
         pic.sharpen(self.sharpnessV)
@@ -223,7 +229,9 @@ class TKGUI:
 
         pic.scale(self.scaleV)
         self.imageStack.push(
-            [pic, [pic.getfileName(), self.tgtSize.get(), self.colour.get(), self.shadeCount.get(), self.hue.get(), self.brightness.get(),
+            [pic, [f"cache\\Saved({self.k}).png", self.tgtSize.get(), self.colour.get(), self.shadeCount.get(),
+                   self.hue.get(),
+                   self.brightness.get(),
                    self.sharpness.get(), self.scale.get()]])
 
         picTK = pic.convertTK()
@@ -235,12 +243,15 @@ class TKGUI:
         self.undoRedoChange()
 
     def convertImagePremade(self):
+        if self.openedImage is True:
+            self.imageStack.last = 0
+            self.openedImage = False
         self.k += 1
         self.tgtSizeV = int(self.tgtSize.get())
         self.brightnessV = float(self.brightness.get())
         self.sharpnessV = float(self.sharpness.get())
         self.scaleV = float(self.scale.get())
-        img = ImageRender("_internal\\asset\\test.jpg")
+        img = ImageRender("asset\\test.jpg")
         self.newIMGDisp.config(image=img.convertTK())
         self.newIMGDisp.Image = None
         print(self.imageStack.list2stack[0][1][0])
@@ -250,8 +261,9 @@ class TKGUI:
         # pic.resizeNT(targetSize=self.tgtSizeV)
         pic.resizeLC(self.tgtSizeV)
         pic.sharpen(self.sharpnessV)
-        pic2 = ImageRender(self.palette).convertNP()
-        pic.convertPartPPM(pic2)
+        strt = time()
+        pic.convertPartPPM(self.palette)
+        print(time() - strt)
         pic.save(f"cache\\Saved({self.k}).png")
         pic = ImageRender(f"cache\\Saved({self.k}).png")
         pic.sharpen(self.sharpnessV)
@@ -259,7 +271,9 @@ class TKGUI:
 
         pic.scale(self.scaleV)
         self.imageStack.push(
-            [pic, [pic.getfileName(), self.tgtSize.get(), self.colour.get(), self.shadeCount.get(), self.hue.get(), self.brightness.get(),
+            [pic, [f"cache\\Saved({self.k}).png", self.tgtSize.get(), self.colour.get(), self.shadeCount.get(),
+                   self.hue.get(),
+                   self.brightness.get(),
                    self.sharpness.get(), self.scale.get()]])
 
         picTK = pic.convertTK()
@@ -280,7 +294,8 @@ class TKGUI:
         pic.sharpen(self.sharpnessV)
         pic.scale(self.scaleV)
 
-        self.imageStack.push([pic, [pic.getfileName(), self.tgtSize.get(), self.colour.get(), self.shadeCount.get(), self.hue.get(), self.brightness.get(),
+        self.imageStack.push([pic, [pic.getfileName(), self.tgtSize.get(), self.colour.get(), self.shadeCount.get(),
+                                    self.hue.get(), self.brightness.get(),
                                     self.sharpness.get(), self.scale.get()]])
         # print(self.imageStack.list2stack)
         picTK = pic.convertTK()
@@ -342,7 +357,7 @@ class TKGUI:
         self.tgtSizeV = int(pic[1][1])
         self.colourV = int(pic[1][2])
         self.shadeCountV = int(pic[1][3])
-        self.hueV = int(pic[1][4])
+        self.hueV = float(pic[1][4])
         self.brightnessV = float(pic[1][5])
         self.sharpnessV = float(pic[1][6])
         self.scaleV = int(pic[1][7])
@@ -428,7 +443,7 @@ class TKGUI:
         self.sharpness.insert(0, "1")
         self.scale.delete(0, 'end')
         self.scale.insert(0, "4")
-        self.palette = "_internal\\asset\\testPremadePalette.png"
+        self.palette = ImageRender("_internal\\asset\\testPremadePalette.png").convertNP()
 
     def undoRedoChange(self):
         # print("U", self.imageStack.last, self.imageStack.getSize())
@@ -449,9 +464,11 @@ def main():
     except FileExistsError:
         pass
     finally:
+        warmUP()
         rootTK = tk.Tk()
         rootTK.minsize(600, 600)
-        rootTK.iconbitmap("_internal\\asset\\STR_Logo_PA.ico")
+        # rootTK.resizable(False, False)
+        rootTK.iconbitmap("asset\\STR_Logo_PA.ico")
         TKGUI(rootTK)
         rootTK.mainloop()
 
