@@ -468,7 +468,7 @@ def main():
         rootTK = tk.Tk()
         rootTK.minsize(600, 600)
         # rootTK.resizable(False, False)
-        rootTK.iconbitmap("asset\\STR_Logo_PA.ico")
+        rootTK.iconbitmap("_internal\\asset\\STR_Logo_PA.ico")
         TKGUI(rootTK)
         rootTK.mainloop()
 
