@@ -30,14 +30,14 @@ class TKGUI:
         self.imageOpen1.grid(row=0, column=0, padx=5, pady=5)
 
         self.imageConvertAdaptive1 = tk.Button(self.frameTop, text="convert image (adaptive)",
-                                               command=self.convertImageAdaptive)
+                                               command=lambda: self.convertImage(True))
         self.imageConvertAdaptive1.grid(row=0, column=1, padx=5, pady=5)
 
         self.importPalette1 = tk.Button(self.frameTop, text="import palette", command=self.importPalette)
         self.importPalette1.grid(row=0, column=2, padx=5, pady=5)
 
         self.imageConvertPremade1 = tk.Button(self.frameTop, text="convert image (premade)",
-                                              command=self.convertImagePremade)
+                                              command=self.convertImage)
         self.imageConvertPremade1.grid(row=0, column=3, sticky=tk.N, padx=5, pady=5)
 
         self.imageSave1 = tk.Button(self.frameTop, text="save image", command=self.saveImage)
@@ -139,14 +139,14 @@ class TKGUI:
         self.imageOpen.grid(row=0, column=0, sticky=tk.E, padx=5, pady=5)
 
         self.imageConvertAdaptive = tk.Button(self.frameMiddle, text="convert image (adaptive)",
-                                              command=self.convertImageAdaptive)
+                                              command=lambda: self.convertImage(True))
         self.imageConvertAdaptive.grid(row=0, column=1, sticky=tk.N, padx=5, pady=5)
 
         self.importPalette = tk.Button(self.frameMiddle, text="import palette", command=self.importPalette)
         self.importPalette.grid(row=0, column=2, padx=5, pady=5)
 
         self.imageConvertPremade = tk.Button(self.frameMiddle, text="convert image (premade)",
-                                             command=self.convertImagePremade)
+                                             command=self.convertImage)
         self.imageConvertPremade.grid(row=0, column=3, sticky=tk.N, padx=5, pady=5)
 
         self.imageSave = tk.Button(self.frameMiddle, text="save image", command=self.saveImage)
@@ -172,7 +172,7 @@ class TKGUI:
         self.imageStack.last = 0
         if self.openFilePath != "":
             self.openedImage = True
-        filePath = filedialog.askopenfilename(filetypes=[("Image files", "")])
+        filePath = filedialog.askopenfilename(filetypes=[("Image files", "*.png;*.jpg;*.jpeg;*.bmp;*.gif")])
         self.openFilePath = filePath
         if self.openFilePath:
             self.undoRedoChange()
@@ -195,7 +195,7 @@ class TKGUI:
         self.imageStack.getCurrent()[0].save(filePath)
         # self.newIMG.show()
 
-    def convertImageAdaptive(self):
+    def convertImage(self, adaptive=False):
         if self.openedImage is True:
             self.imageStack.last = 0
             self.openedImage = False
@@ -218,9 +218,10 @@ class TKGUI:
         pic.resizeLC(self.tgtSizeV)
         pic.sharpen(self.sharpnessV)
         strt = time()
-        pic2 = pic
-        palette = pic2.palette(self.colourV, self.shadeCountV, self.hueV)
-        pic.convertPartPPM(palette)
+        if adaptive is True:
+            pic2 = pic
+            self.palette = pic2.palette(self.colourV, self.shadeCountV, self.hueV)
+        pic.convertPartPPM(self.palette)
         end = time()
         print(end - strt)
         pic.save(f"cache\\Saved({self.k}).png")
@@ -240,48 +241,6 @@ class TKGUI:
         self.newIMGDisp.Image = picTK
         self.newIMGLabel.config(text=pic.getSize())
         self.newIMG.Text = pic.getSize()
-        self.newIMG = pic
-        self.undoRedoChange()
-
-    def convertImagePremade(self):
-        if self.openedImage is True:
-            self.imageStack.last = 0
-            self.openedImage = False
-        self.k += 1
-        self.tgtSizeV = int(self.tgtSize.get())
-        self.brightnessV = float(self.brightness.get())
-        self.sharpnessV = float(self.sharpness.get())
-        self.scaleV = float(self.scale.get())
-        img = ImageRender("asset\\test.jpg")
-        self.newIMGDisp.config(image=img.convertTK())
-        self.newIMGDisp.Image = None
-        print(self.imageStack.list2stack[0][1][0])
-        self.newIMG = ImageRender(self.imageStack.list2stack[0][1][0])
-        pic = self.newIMG
-        pic.convertRGB()
-        # pic.resizeNT(targetSize=self.tgtSizeV)
-        pic.resizeLC(self.tgtSizeV)
-        pic.sharpen(self.sharpnessV)
-        strt = time()
-        pic.convertPartPPM(self.palette)
-        print(time() - strt)
-        pic.save(f"cache\\Saved({self.k}).png")
-        pic = ImageRender(f"cache\\Saved({self.k}).png")
-        pic.sharpen(self.sharpnessV)
-        pic.enhanceBrightness(self.brightnessV)
-
-        pic.scale(self.scaleV)
-        self.imageStack.push(
-            [pic, [f"cache\\Saved({self.k}).png", self.tgtSize.get(), self.colour.get(), self.shadeCount.get(),
-                   self.hue.get(),
-                   self.brightness.get(),
-                   self.sharpness.get(), self.scale.get()]])
-
-        picTK = pic.convertTK()
-        self.newIMGDisp.config(image=picTK)
-        self.newIMGDisp.Image = picTK
-        self.newIMGLabel.config(text=pic.getSize())
-        self.newIMGLabel.Text = pic.getSize()
         self.newIMG = pic
         self.undoRedoChange()
 
