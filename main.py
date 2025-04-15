@@ -200,13 +200,16 @@ class TKGUI:
             self.imageStack.last = 0
             self.openedImage = False
         self.k += 1
-        self.tgtSizeV = int(self.tgtSize.get())
-        self.colourV = int(self.colour.get())
-        self.shadeCountV = int(self.shadeCount.get())
-        self.brightnessV = float(self.brightness.get())
-        self.sharpnessV = float(self.sharpness.get())
-        self.scaleV = int(self.scale.get())
-        self.hueV = float(self.hue.get())
+        try:
+            self.tgtSizeV = int(self.tgtSize.get())
+            self.colourV = int(self.colour.get())
+            self.shadeCountV = int(self.shadeCount.get())
+            self.brightnessV = float(self.brightness.get())
+            self.sharpnessV = float(self.sharpness.get())
+            self.scaleV = int(self.scale.get())
+            self.hueV = float(self.hue.get())
+        except ValueError:
+            quit(1)
         img = ImageRender("asset\\test.jpg")
         self.newIMGDisp.config(image=img.convertTK())
         self.newIMGDisp.Image = None

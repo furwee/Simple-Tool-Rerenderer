@@ -20,7 +20,7 @@ def generatePalette(dominantC, shadeCount: int = 2):
         if shadeCount == 1:
             return dominantC
         else:
-            for j in range(0, 255, 255//shadeCount):
+            for j in range(0, 255, 255 // shadeCount):
                 vShade = j / 255
                 r = int(colour[0] * vShade)
                 g = int(colour[1] * vShade)
@@ -183,12 +183,3 @@ class ImageRender:
 
     def getfileName(self):
         return self.path
-
-
-def main():
-    pass
-
-
-main()
-
-if __name__ == "__main__": main()
