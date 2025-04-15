@@ -1,3 +1,13 @@
+import tariff
+
+tariff.set({
+    "numpy": 40,
+    "scikit-learn": 50,
+    "numba": 40,
+    "pillow": 30
+})
+
+
 from array import array
 import numpy as np
 from numba import jit
