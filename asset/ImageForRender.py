@@ -6,6 +6,7 @@ from PIL import Image, ImageTk, ImageEnhance
 from sklearn.cluster import MiniBatchKMeans
 
 
+# noinspection PyTypeChecker
 def LiconvertToPPMToImage(Li, header, fileName):
     newIMGPPMArr = array('B', Li)
     ppm = open(f'asset\\{fileName}.ppm', 'wb')
@@ -61,7 +62,7 @@ def hue(arr, hueV=-1):
             r, g, b = arr2[i] / 255
             h, s, v = rgb_to_hsv(r, g, b)
             h = hueV / 360
-            if s > 0.06:
+            if s > 0.04:
                 s = min(max(s * 1.5, 0.5), 1.0)
             r, g, b = hsv_to_rgb(h, s, v)
             arr2[i] = (r * 255, g * 255, b * 255)
