@@ -1,5 +1,5 @@
 import tkinter as tk
-from tkinter import filedialog
+from tkinter import filedialog, messagebox
 from time import *
 from asset.ImageForRender import *
 from asset.Stack import *
@@ -18,6 +18,7 @@ class TKGUI:
         self.palette = ImageRender("asset\\testPremadePalette.png").convertNP()
         self.k = 0
         self.openedImage = None
+        self.ADAFLAG = False
 
         self.frameMaster = tk.Frame(self.root)
         self.frameMaster.grid(row=0, column=0)
@@ -142,8 +143,8 @@ class TKGUI:
                                               command=lambda: self.convertImage(True))
         self.imageConvertAdaptive.grid(row=0, column=1, sticky=tk.N, padx=5, pady=5)
 
-        self.importPalette = tk.Button(self.frameMiddle, text="import palette", command=self.importPalette)
-        self.importPalette.grid(row=0, column=2, padx=5, pady=5)
+        self.importPaletteB = tk.Button(self.frameMiddle, text="import palette", command=self.importPalette)
+        self.importPaletteB.grid(row=0, column=2, padx=5, pady=5)
 
         self.imageConvertPremade = tk.Button(self.frameMiddle, text="convert image (premade)",
                                              command=self.convertImage)
@@ -196,7 +197,7 @@ class TKGUI:
         # self.newIMG.show()
 
     def convertImage(self, adaptive=False):
-        if self.openedImage is True:
+        if self.openedImage:
             self.imageStack.last = 0
             self.openedImage = False
         self.k += 1
@@ -221,9 +222,15 @@ class TKGUI:
         pic.resizeLC(self.tgtSizeV)
         pic.sharpen(self.sharpnessV)
         strt = time()
-        if adaptive is True:
+        if adaptive:
             pic2 = pic
             self.palette = pic2.palette(self.colourV, self.shadeCountV, self.hueV)
+            self.ADAFLAG = True
+        elif not adaptive and self.ADAFLAG:
+            ans = tk.messagebox.askyesno(title="halt", message="press [YES] to import palette to replace the adaptive palette.\nPress [NO] if you don't intend to change the palette")
+            if ans:
+                self.importPalette()
+            self.ADAFLAG = False
         pic.convertPartPPM(self.palette)
         end = time()
         print(end - strt)
