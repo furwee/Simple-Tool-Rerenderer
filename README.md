@@ -7,7 +7,7 @@ Therefore a palette is used to convert each pixels in the image to the closest c
 This program is made collaboratively by furwee and someone0s.
 
 ## Make sure you have these on your computer:
-- Python >3.9
+- Python >3.9 <3.13
 ## How to use this program:
 1: **clone the repository to the specified locations in your computer**  
 find ```<> code``` at the top right of the repository, download zip to [folder location]<br><br>
